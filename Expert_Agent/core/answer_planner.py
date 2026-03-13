@@ -126,6 +126,7 @@ class AnswerPlanner:
         prompt_parts.append(f"\nIMPORTANT INSTRUCTIONS:")
         prompt_parts.append("- Use ONLY the provided context above.")
         prompt_parts.append("- If information is missing, say 'I cannot find this in the documentation'.")
+        prompt_parts.append("- Do NOT output step headers or internal reasoning steps (e.g. 'Step 1: Analyze the core question') in your final answer.")
         prompt_parts.append(f"- Citations required: {plan.required_citations}")
         prompt_parts.append(f"- Max length: {plan.max_length} words")
         

@@ -25,7 +25,7 @@ from engines.llm_engine import LLMEngine
 # Import Modular Routers
 from api.routers import chat, admin, utils, database, auth
 
-app = FastAPI(title="Hybrid NLP-Expert Agent API", version="2.0.0")
+app = FastAPI(title="LxGuard.AI API", version="2.0.0")
 
 # Enable CORS with more origins
 app.add_middleware(
@@ -152,7 +152,7 @@ app.mount("/docs", StaticFiles(directory=docs_path), name="docs")
 # Root health check
 @app.get("/")
 async def root():
-    return {"status": "online", "system": "Hybrid NLP-Expert Agent"}
+    return {"status": "online", "system": "LxGuard.AI"}
 
 
 @app.get("/health")

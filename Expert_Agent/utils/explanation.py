@@ -292,7 +292,7 @@ class ExplanationGenerator:
         
         # Build the final formatted output for legacy support or internal use
         output = [
-            "### 🤖 AI Expert Answer",
+            "### 🤖 LxGuard.AI Response",
             full_answer,
             "\n---\n",
             "### 📚 Reasoning & Sources",

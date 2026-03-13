@@ -15,8 +15,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Expert Agent Admin",
-  description: "Admin & Governance Dashboard for Expert Agent System",
+  title: "LxGuard.AI Admin",
+  description: "Admin & Governance Dashboard for LxGuard.AI System",
 };
 
 export default function RootLayout({

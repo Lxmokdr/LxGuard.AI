@@ -11,7 +11,8 @@ import {
     ListTree,
     Cpu,
     RefreshCcw,
-    Network
+    Network,
+    FileText
 } from "lucide-react";
 
 export default function PipelinePage() {
@@ -31,14 +32,14 @@ export default function PipelinePage() {
     };
 
     const layers = [
-        { num: 0, name: "Security Check", icon: ShieldCheck, color: "zinc", desc: "RBAC & query safety" },
-        { num: 1, name: "Advanced NLP Core", icon: Network, color: "zinc", desc: "Semantic parsing & intents" },
-        { num: 2, name: "Symbolic Expert Brain", icon: Brain, color: "emerald", desc: "Deterministic business rules & ontology", highlight: true },
-        { num: 3, name: "Intent Arbitration", icon: Scale, color: "amber", desc: "Resolves conflicts & blocks off-topic queries", highlight: true },
-        { num: 4, name: "Agent-Driven Retrieval", icon: Search, color: "zinc", desc: "Symbolic + vector search (pgvector)" },
-        { num: 5, name: "Recursive Answer Planning", icon: ListTree, color: "zinc", desc: "Structures formatting & validates contracts" },
-        { num: 6, name: "Controlled Generation (LLM)", icon: Cpu, color: "indigo", desc: "Local inference grounded in facts", highlight: true },
-        { num: 7, name: "Self-Validation Loop", icon: RefreshCcw, color: "zinc", desc: "Hallucination checker & SIEM audit logging" },
+        { num: 0, name: "Contrôle de Sécurité", icon: ShieldCheck, color: "zinc", desc: "RBAC & sécurité des requêtes" },
+        { num: 1, name: "Cœur NLP Avancé", icon: Network, color: "zinc", desc: "Analyse sémantique & intentions" },
+        { num: 2, name: "Cerveau Expert Symbolique", icon: Brain, color: "emerald", desc: "Règles métier déterministes & ontologie", highlight: true },
+        { num: 3, name: "Arbitrage d'Intention", icon: Scale, color: "amber", desc: "Résout les conflits & bloque les requêtes hors sujet", highlight: true },
+        { num: 4, name: "Recherche Pilotée par Agent", icon: Search, color: "zinc", desc: "Recherche symbolique + vectorielle (pgvector)" },
+        { num: 5, name: "Planification de Réponse Récursive", icon: ListTree, color: "zinc", desc: "Structure le formatage & valide les contrats" },
+        { num: 6, name: "Génération Contrôlée (LLM)", icon: Cpu, color: "indigo", desc: "Inférence locale basée sur les faits", highlight: true },
+        { num: 7, name: "Boucle d'Auto-Validation", icon: RefreshCcw, color: "zinc", desc: "Vérificateur d'hallucinations & journalisation d'audit SIEM" },
     ];
 
     const getColorClasses = (color: string, isHighlighted: boolean) => {
@@ -60,18 +61,24 @@ export default function PipelinePage() {
             <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_top_right,rgba(99,102,241,0.05),transparent_50%)] pointer-events-none"></div>
 
             <div className="w-full max-w-5xl relative z-10">
-                <div className="flex justify-between items-center mb-12">
+                <div className="flex justify-between items-center mb-10">
                     <Link
                         href="/architecture"
                         className="flex items-center text-zinc-400 hover:text-white transition-colors group"
                     >
                         <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
-                        Back to Architecture
+                        Retour à l'Architecture
                     </Link>
                     <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-zinc-500 tracking-tight text-center">
-                        The 8-Layer Neuro-Symbolic Pipeline
+                        Le Pipeline Neuro-Symbolique à 8 Couches
                     </h2>
-                    <div className="w-40"></div> {/* Spacer to center title */}
+                    <Link
+                        href="/documents"
+                        className="flex items-center text-teal-400 hover:text-teal-300 transition-colors group text-sm font-medium"
+                    >
+                        Traitement des Documents
+                        <FileText className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                    </Link>
                 </div>
 
                 <motion.div
@@ -112,7 +119,7 @@ export default function PipelinePage() {
                                             </div>
                                             <div>
                                                 <h3 className={`text-lg font-bold mb-1 ${layer.highlight ? "text-white" : "text-zinc-200"}`}>
-                                                    Layer {layer.num}: {layer.name}
+                                                    Couche {layer.num}: {layer.name}
                                                 </h3>
                                                 <p className={`text-sm leading-snug ${layer.highlight ? `text-${layer.color}-200/80` : "text-zinc-500"}`}>
                                                     {layer.desc}
@@ -135,15 +142,15 @@ export default function PipelinePage() {
                 >
                     <div className="flex items-center gap-2 text-sm text-zinc-400">
                         <span className="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]"></span>
-                        Deterministic Focus
+                        Focus Déterministe
                     </div>
                     <div className="flex items-center gap-2 text-sm text-zinc-400">
                         <span className="w-3 h-3 rounded-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]"></span>
-                        Policy Guardrail
+                        Garde-fou de Politique
                     </div>
                     <div className="flex items-center gap-2 text-sm text-zinc-400">
                         <span className="w-3 h-3 rounded-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]"></span>
-                        Generative Focus
+                        Focus Génératif
                     </div>
                 </motion.div>
 

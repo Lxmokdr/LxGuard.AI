@@ -8,7 +8,10 @@ export default function MetricsPage() {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        if (!token) { window.location.href = "/login"; return }
+        if (!token) {
+            window.location.href = "/login"
+            return
+        }
         apiFetch("/admin/metrics?limit=50", token)
             .then(setMetrics)
             .finally(() => setLoading(false))

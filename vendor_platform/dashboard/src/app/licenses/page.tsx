@@ -17,7 +17,13 @@ export default function LicensesPage() {
         const [l, c] = await Promise.all([apiFetch("/admin/licenses", token!), apiFetch("/admin/customers", token!)])
         setLicenses(l); setCustomers(c); setLoading(false)
     }
-    useEffect(() => { if (!token) { window.location.href = "/login"; return }; load() }, [token])
+    useEffect(() => {
+        if (!token) {
+            window.location.href = "/login"
+            return
+        }
+        load()
+    }, [token])
 
     const create = async (e: React.FormEvent) => {
         e.preventDefault()

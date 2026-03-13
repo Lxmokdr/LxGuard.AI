@@ -1,5 +1,5 @@
 """
-Expert Agent Core - Layer 2 of Hybrid Architecture
+LxGuard.AI Core - Layer 2 of Neuro-Symbolic Architecture
 Responsibilities:
 - Ontology (concepts + relations)
 - Production rules (IF-THEN with constraints)
@@ -96,13 +96,13 @@ class ProductionRule:
 
 class ExpertAgent:
     """
-    Expert Agent - The deterministic brain of the system.
+    LxGuard.AI - The deterministic brain of the system.
     Controls what must be answered and how.
     No LLM is allowed to violate these rules.
     """
     
     def __init__(self, domain_id: str = None):
-        print(f"🧠 Initializing Expert Agent Core (Domain: {domain_id or 'Global'})...")
+        print(f"🧠 Initializing LxGuard.AI Core (Domain: {domain_id or 'Global'})...")
         self.domain_id = domain_id
         self.loader = RuleLoader(domain_id=domain_id)
         
@@ -134,7 +134,7 @@ class ExpertAgent:
             except Exception as e:
                 print(f"⚠️  Failed to load induced KG: {e}")
         
-        print("✅ Expert Agent ready with ontology, rules, and induced KG")
+        print("✅ LxGuard.AI ready with ontology, rules, and induced KG")
         self.check_rule_conflicts()
 
     def check_rule_conflicts(self) -> List[Dict[str, Any]]:

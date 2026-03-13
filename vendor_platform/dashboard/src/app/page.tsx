@@ -10,7 +10,10 @@ export default function DashboardPage() {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        if (!token) { window.location.href = "/login"; return }
+        if (!token) {
+            window.location.href = "/login"
+            return
+        }
         apiFetch("/admin/stats", token)
             .then(setStats)
             .catch(() => setStats(null))
@@ -27,7 +30,7 @@ export default function DashboardPage() {
     return (
         <div className="space-y-8">
             <div>
-                <h1 className="text-3xl font-bold text-white">Vendor Control Dashboard</h1>
+                <h1 className="text-3xl font-bold text-white">LxGuard.AI Control Dashboard</h1>
                 <p className="text-zinc-400 text-sm mt-1">Centralized enterprise license management</p>
             </div>
             {loading ? (

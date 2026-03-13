@@ -1,6 +1,6 @@
-# Expert Agent — Hybrid NLP Architecture
+# LxGuard.AI — Neuro-Symbolic Governance Architecture
 
-This directory contains the core logic for the **Hybrid NLP-Expert Agent**, a security-critical AI system designed for enterprise environments. It combines probabilistic NLP (LLMs) with deterministic Expert Rules (Symbolic Logic) across an 8-layer architecture to ensure accuracy, safety, and auditability.
+This directory contains the core logic for **LxGuard.AI**, a security-critical AI system designed for enterprise environments. It combines probabilistic NLP (LLMs) with deterministic Expert Rules (Symbolic Logic) across an 8-layer architecture to ensure accuracy, safety, and auditability.
 
 ---
 

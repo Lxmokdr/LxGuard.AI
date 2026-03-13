@@ -1,5 +1,5 @@
 /**
- * API Client for Expert Agent Admin UI
+ * API Client for LxGuard.AI Admin UI
  * Comprehensive client with all admin endpoints
  */
 

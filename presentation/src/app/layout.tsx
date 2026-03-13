@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-    title: "Hybrid NLP-Expert Agent Presentation",
+    title: "LxGuard.AI System Presentation",
     description: "Complete System Overview",
 };
 

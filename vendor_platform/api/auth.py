@@ -17,7 +17,7 @@ import models
 
 SECRET_KEY = os.environ.get("VENDOR_JWT_SECRET", "change-me-in-production-vendor-secret")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 480  # 8 hours
+ACCESS_TOKEN_EXPIRE_MINUTES = 60  # 1 hour
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")

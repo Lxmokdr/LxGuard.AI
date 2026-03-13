@@ -688,7 +688,7 @@ class HybridPipeline:
             f"\nQuestion: {question}",
             f"\n{self.planner.format_plan_for_prompt(plan)}",
             "\n\nCONSTRAINTS:",
-            "- Follow the structure and steps EXACTLY",
+            "- Formulate your answer based on the steps, but DO NOT include the step headers in the response",
             "- Use ONLY provided evidence",
             "- Do NOT hallucinate",
             "- Cite sources if provided"

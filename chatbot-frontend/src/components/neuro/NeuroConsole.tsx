@@ -37,7 +37,7 @@ const NeuroConsole = ({
             </div>
             <div>
               <h2 className="text-lg font-semibold text-foreground text-glow-cyan">
-                Neuro-Console
+                LxGuard.AI Console
               </h2>
               <p className="text-xs text-muted-foreground font-mono">
                 Real-time reasoning trace
@@ -74,9 +74,8 @@ const NeuroConsole = ({
         <div className="flex items-center justify-between text-xs">
           <div className="flex items-center gap-2">
             <span
-              className={`w-2 h-2 rounded-full ${
-                isProcessing ? "bg-primary animate-pulse" : "bg-secondary"
-              }`}
+              className={`w-2 h-2 rounded-full ${isProcessing ? "bg-primary animate-pulse" : "bg-secondary"
+                }`}
             />
             <span className="text-muted-foreground">
               {isProcessing ? "Processing query..." : "System ready"}

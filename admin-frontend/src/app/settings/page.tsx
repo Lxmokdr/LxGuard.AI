@@ -197,7 +197,7 @@ export default function SettingsPage() {
                             <CardHeader>
                                 <CardTitle className="text-xl font-bold">Core System Settings</CardTitle>
                                 <CardDescription className="text-muted-foreground">
-                                    Configure global parameters for the Hybrid NLP-Expert Architecture.
+                                    Configure global parameters for the LxGuard.AI Architecture.
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">

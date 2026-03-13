@@ -1,6 +1,6 @@
 # Deploying a New Enterprise Installation
 
-This guide explains the complete end-to-end process of setting up a brand-new Enterprise Deployment of the Hybrid NLP-Expert Agent Platform and connecting it to the centralized Vendor Licensing System.
+This guide explains the complete end-to-end process of setting up a brand-new Enterprise Deployment of the **LxGuard.AI Platform** and connecting it to the centralized Vendor Licensing System.
 
 ---
 
@@ -8,7 +8,7 @@ This guide explains the complete end-to-end process of setting up a brand-new En
 Before an Enterprise customer can start using their system, they must be registered in your Vendor database, and a License Key must be generated for them.
 
 ### Step 1: Create the Customer
-1. Log into your **Vendor Control Dashboard** (usually running on port `4000`).
+1. Log into your **LxGuard.AI Vendor Console** (usually running on port `4000`).
 2. Navigate to the **Customers** tab.
 3. Click "Add Customer" and fill in the Organization name, Contact Email, and select the organization type (e.g., Enterprise).
 
@@ -33,7 +33,7 @@ cd projet
 ```
 
 ### Step 2: Configure Environment Variables
-Inside the root folder (`projetiia/projet`), look for the main `docker-compose.yml` file. You need to configure the `expert-agent-backend` service. 
+Inside the root folder (`projetiia/projet`), look for the main `docker-compose.yml` file. You need to configure the `lxguard-backend` service. 
 
 Alternatively, create an `.env` file in the same directory as `docker-compose.yml` and provide the following variables:
 ```env
@@ -62,7 +62,7 @@ This will spin up the backend (FastAPI), the Admin UI (Next.js), the Chatbot Fro
 Once the customer runs `docker compose up`, the system will automatically reach out to you to verify itself.
 
 ### The Background Process:
-1. **Startup Check:** The Enterprise `expert-agent-backend` container wakes up and triggers its `license_check_once` function.
+1. **Startup Check:** The Enterprise `lxguard-backend` container wakes up and triggers its `license_check_once` function.
 2. **Ping Vendor:** It sends an HTTP POST request to your `LICENSE_SERVER_URL/api/license/check` containing its `LICENSE_KEY`, Hostname, and a unique UUID identifying this specific server instance.
 3. **Approval:** The Vendor Server receives this, verifies the key, records the instance, and replies with an encrypted `valid: true` HMAC signature.
 4. **Boot Complete:** The Enterprise Backend verifies the HMAC signature, confirms it hasn't been spoofed, and completes its startup sequence (loading NLP models, initiating Vector DBs, etc.).

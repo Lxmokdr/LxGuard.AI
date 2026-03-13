@@ -9,7 +9,13 @@ export default function InstancesPage() {
     const [loading, setLoading] = useState(true)
 
     const load = () => apiFetch("/admin/instances", token!).then(setInstances).finally(() => setLoading(false))
-    useEffect(() => { if (!token) { window.location.href = "/login"; return }; load() }, [token])
+    useEffect(() => {
+        if (!token) {
+            window.location.href = "/login"
+            return
+        }
+        load()
+    }, [token])
 
     const disable = async (id: string) => {
         if (!confirm(`Disable instance ${id}? This will revoke its license.`)) return

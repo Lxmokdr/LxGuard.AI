@@ -38,7 +38,7 @@ export default function DashboardPage() {
             <div>
                 <h1 className="text-3xl font-bold">Admin Dashboard</h1>
                 <p className="text-muted-foreground mt-1">
-                    Expert Agent System - Governance & Operations Control
+                    LxGuard.AI System - Governance & Operations Control
                 </p>
             </div>
 

@@ -1,16 +1,16 @@
-# Expert Agent: Comprehensive Technical Documentation
+# LxGuard.AI: Comprehensive Technical Documentation
 
 ## 1. Full System Overview
 
 ### Purpose
-The **Expert Agent** is a Hybrid Neuro-Symbolic Conversational Architecture designed for enterprise knowledge retrieval in regulated environments. It combines the flexibility of Large Language Models (LLMs) with the deterministic control of Symbolic Reasoning (Expert Systems) and Formal Ontologies. This hybrid approach ensures that answers are grounded in verified facts, compliant with enterprise rules, and resistant to hallucinations.
+The **LxGuard.AI** is a Hybrid Neuro-Symbolic Conversational Architecture designed for enterprise knowledge retrieval in regulated environments. It combines the flexibility of Large Language Models (LLMs) with the deterministic control of Symbolic Reasoning (Expert Systems) and Formal Ontologies. This hybrid approach ensures that answers are grounded in verified facts, compliant with enterprise rules, and resistant to hallucinations.
 
 ### High-Level Architecture
 The system is structured into **8 distinct layers**, following a "Neuro-Symbolic" orchestration pattern:
 
 1.  **Security Layer**: PII detection, redaction, and prompt injection filtering.
 2.  **NLP Core Layer**: Probabilistic semantic parsing and intent hypothesis generation (spaCy).
-3.  **Expert Agent Layer**: Deterministic validation of intents using formal ontology and production rules.
+3.  **LxGuard.AI Layer**: Deterministic validation of intents using formal ontology and production rules.
 4.  **Intent Arbitration Layer**: Bridge between probabilistic NLP and symbolic expert rules to resolve conflicts.
 5.  **Retrieval Layer**: Multi-tier engine (Symbolic, Semantic (pgvector), Evidence, Graph (RDF)).
 6.  **Answer Planning Layer**: Creates a structured "blueprint" for the LLM to follow.
@@ -18,7 +18,7 @@ The system is structured into **8 distinct layers**, following a "Neuro-Symbolic
 8.  **Validation Layer**: Self-critique of the generated answer against the plan and evidence.
 9.  **Audit Layer**: Immutable logging to JSONL and PostgreSQL for compliance.
 
-25.  **Control**: The Expert Agent (Symbolic) acts as a supervisor, pruning LLM outputs and enforcing rigid constraints.
+25.  **Control**: The LxGuard.AI (Symbolic) acts as a supervisor, pruning LLM outputs and enforcing rigid constraints.
 26.  **Output**: A validated, cited, and audited response is returned to the user.
 
 #### System Architecture Diagram
@@ -32,7 +32,7 @@ graph TD
     
     SubGraph_Layer[8-Layer Hybrid Pipeline]
     NLP[spaCy NLP Core]
-    Expert[Expert Agent - Symbolic]
+    Expert[LxGuard.AI - Symbolic]
     Retrieval[Retrieval - pgvector/RDF]
     Ollama[Local LLM - Ollama]
     
@@ -211,7 +211,7 @@ sequenceDiagram
     participant U as User
     participant S as Security Layer
     participant N as NLP Core (L1)
-    participant E as Expert Agent (L2)
+    participant E as LxGuard.AI (L2)
     participant A as Arbitrator (L3)
     participant R as Retrieval (L4)
     participant P as Planner (L5)
@@ -251,7 +251,7 @@ sequenceDiagram
 2.  **NLP Analysis**: Query is lemmatized; keywords, entities, and intent hypotheses are extracted.
 3.  **Arbitration**: Expert rules validate intents; conflicts are resolved via ontology priority.
 4.  **Retrieval**:
-    - **Tier 1**: Expert Agent filters documents by eligibility rules.
+    - **Tier 1**: LxGuard.AI filters documents by eligibility rules.
     - **Tier 2**: Top documents are ranked by vector similarity (pgvector).
     - **Tier 3**: Chunks are scored for relevance, compatibility, and recency.
     - **Tier 4**: KG is searched for keywords to find formal triples.
@@ -270,7 +270,7 @@ sequenceDiagram
     - NLP Core identifies `convention` and `stage` as French technical terms.
     - Intent Hypotheses: `ContractAnalysis (0.8)`, `General (0.4)`.
 3.  **Expert Check**:
-    - Expert Agent verifies that for the intent `ContractAnalysis`, the user (Guest) has permission.
+    - LxGuard.AI verifies that for the intent `ContractAnalysis`, the user (Guest) has permission.
     - It identifies that "Sanofi-specific" documents are required for this topic.
 4.  **Retrieval**:
     - Tier 1: System selects documents tagged with "HR" and "Stage".
@@ -320,7 +320,7 @@ sequenceDiagram
 
 ## 11. Performance & Evaluation Metrics
 
-The following metrics represent the verified performance of the Hybrid NLP-Expert Agent based on the standardized **Research Baseline Evaluation** (5,000-query corpus). 
+The following metrics represent the verified performance of LxGuard.AI based on the standardized **Research Baseline Evaluation** (5,000-query corpus). 
 
 > [!NOTE]
 > These values are derived from the project's formalized evaluation suite. Real-time operational metrics (latency/throughput) can be monitored via the `/admin/stats` and `/admin/metrics` endpoints.

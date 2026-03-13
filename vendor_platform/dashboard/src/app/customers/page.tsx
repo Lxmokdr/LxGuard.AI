@@ -13,7 +13,13 @@ export default function CustomersPage() {
     const [saving, setSaving] = useState(false)
 
     const load = () => apiFetch("/admin/customers", token!).then(setCustomers).finally(() => setLoading(false))
-    useEffect(() => { if (!token) { window.location.href = "/login"; return }; load() }, [token])
+    useEffect(() => {
+        if (!token) {
+            window.location.href = "/login"
+            return
+        }
+        load()
+    }, [token])
 
     const create = async (e: React.FormEvent) => {
         e.preventDefault(); setSaving(true)

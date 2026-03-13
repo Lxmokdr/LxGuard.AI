@@ -30,6 +30,8 @@ services:
       - VENDOR_DATABASE_URL=postgresql://vendor:vendorpass@vendor_db:5432/vendor_db
       - VENDOR_HMAC_SECRET=${VENDOR_HMAC_SECRET:-change-me-in-production}
       - VENDOR_JWT_SECRET=${VENDOR_JWT_SECRET:-change-me-jwt-secret}
+    volumes:
+      - ./api:/app
     depends_on:
       - vendor_db
     networks:

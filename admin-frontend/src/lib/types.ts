@@ -1,5 +1,5 @@
 /**
- * TypeScript Types for Expert Agent Admin UI
+ * TypeScript Types for LxGuard.AI Admin UI
  */
 
 // ============================================================================

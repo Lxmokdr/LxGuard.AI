@@ -25,7 +25,7 @@ export default function TitleCard() {
                 </div>
 
                 <h1 className="text-5xl sm:text-7xl font-extrabold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-indigo-100 to-zinc-400 drop-shadow-sm">
-                    Hybrid NLP-Expert Agent
+                    LxGuard.AI
                 </h1>
 
                 <motion.p
@@ -34,7 +34,7 @@ export default function TitleCard() {
                     transition={{ duration: 1, delay: 0.8 }}
                     className="text-2xl sm:text-3xl text-zinc-300 font-light tracking-wide mb-16"
                 >
-                    Complete System Overview
+                    Vue d'ensemble complète du système
                 </motion.p>
 
                 <motion.div
@@ -46,14 +46,14 @@ export default function TitleCard() {
                         href="/architecture"
                         className="group relative inline-flex items-center justify-center px-8 py-4 font-semibold text-white transition-all duration-300 bg-indigo-600 border border-transparent rounded-full hover:bg-indigo-700 hover:shadow-[0_0_30px_rgba(79,70,229,0.5)] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-900"
                     >
-                        <span className="mr-3 text-lg">View Architecture Diagram</span>
+                        <span className="mr-3 text-lg">Voir le diagramme d'architecture</span>
                         <Server className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </Link>
                 </motion.div>
             </motion.div>
 
             <div className="absolute bottom-8 text-zinc-600 text-sm font-medium uppercase tracking-widest">
-                Confidential & Proprietary • v4.0
+                Confidentiel & Propriétaire • v4.0
             </div>
         </div>
     );

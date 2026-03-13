@@ -1,8 +1,8 @@
-# Research Paper: Neuro-Symbolic Hybrid NLP-Expert Architecture
+# Research Paper: LxGuard.AI Neuro-Symbolic Architecture
 ## Technical Overview and Operational Workflows
 
 ### 1. Abstract
-This document outlines the architecture and operational mechanics of the **Hybrid NLP-Expert Agent**, a dual-mode artificial intelligence system designed to combine the probabilistic strengths of Large Language Models (LLMs) with the deterministic reliability of Symbolic Expert Systems. The system implements a novel **8-Layer Neuro-Symbolic Pipeline** to ensure that enterprise-grade queries (e.g., Anti-Fraud and AML monitoring) are governed by formal ontologies while maintaining human-like conversational flexibility.
+This document outlines the architecture and operational mechanics of **LxGuard.AI**, a dual-mode artificial intelligence system designed to combine the probabilistic strengths of Large Language Models (LLMs) with the deterministic reliability of Symbolic Expert Systems. The system implements a novel **8-Layer Neuro-Symbolic Pipeline** to ensure that enterprise-grade queries (e.g., Anti-Fraud and AML monitoring) are governed by formal ontologies while maintaining human-like conversational flexibility.
 
 ---
 

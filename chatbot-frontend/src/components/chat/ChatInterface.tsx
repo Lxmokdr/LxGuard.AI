@@ -65,10 +65,10 @@ const ChatInterface = ({
             </div>
             <div>
               <h2 className="text-lg font-semibold text-foreground">
-                Expert Diagnosis
+                LxGuard.AI Diagnosis
               </h2>
               <p className="text-xs text-muted-foreground">
-                Hybrid Knowledge Agent
+                LxGuard.AI Knowledge Agent
               </p>
             </div>
           </div>
@@ -119,7 +119,7 @@ const ChatInterface = ({
               <Sparkles className="w-8 h-8 text-primary" />
             </div>
             <h3 className="text-xl font-semibold text-foreground mb-2">
-              Welcome to Transparent Intelligence
+              Welcome to LxGuard.AI
             </h3>
             <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
               Describe your Next.js issue below. Watch the Neuro-Console on the right

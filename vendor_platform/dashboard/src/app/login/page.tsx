@@ -25,6 +25,7 @@ export default function LoginPage() {
             if (!res.ok) throw new Error("Invalid credentials")
             const data = await res.json()
             localStorage.setItem("vendor_token", data.access_token)
+            localStorage.setItem("vendor_login_time", Date.now().toString())
             router.push("/")
         } catch (err: any) {
             setError(err.message)
@@ -35,7 +36,7 @@ export default function LoginPage() {
         <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
             <form onSubmit={handleLogin} className="w-full max-w-sm bg-zinc-900 border border-white/10 rounded-2xl p-8 space-y-5">
                 <div>
-                    <h1 className="text-2xl font-bold text-white">Vendor Console</h1>
+                    <h1 className="text-2xl font-bold text-white">LxGuard.AI Vendor Console</h1>
                     <p className="text-zinc-500 text-sm mt-1">Sign in to manage enterprise licenses</p>
                 </div>
                 {error && <div className="bg-red-500/10 text-red-400 border border-red-500/20 rounded p-3 text-sm">{error}</div>}

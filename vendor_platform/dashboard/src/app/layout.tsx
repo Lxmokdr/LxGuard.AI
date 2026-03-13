@@ -5,7 +5,7 @@ import LogoutButton from "../components/LogoutButton"
 import "./globals.css"
 
 export const metadata: Metadata = {
-    title: "Vendor Control Dashboard",
+    title: "LxGuard.AI Vendor Console",
     description: "Enterprise license management and monitoring",
 }
 
@@ -23,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <body className="bg-zinc-950 text-zinc-100 min-h-screen flex">
                 <aside className="w-56 shrink-0 border-r border-white/5 bg-zinc-900 flex flex-col py-6">
                     <div className="px-5 mb-8">
-                        <p className="text-xs font-mono text-indigo-400 uppercase tracking-widest">Vendor Console</p>
+                        <p className="text-xs font-mono text-indigo-400 uppercase tracking-widest">LxGuard.AI</p>
                         <p className="text-lg font-bold text-white mt-0.5">Control Panel</p>
                     </div>
                     <nav className="flex-1 space-y-1 px-3">

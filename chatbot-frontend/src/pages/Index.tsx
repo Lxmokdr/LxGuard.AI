@@ -85,7 +85,7 @@ const Index = () => {
   const [rules, setRules] = useState<Rule[]>([]);
   const [knowledgeSources, setKnowledgeSources] = useState<KnowledgeSource[]>([]);
   const [streamingMessage, setStreamingMessage] = useState<Message | null>(null);
-  const [modelUsed, setModelUsed] = useState("Hybrid NLP-Expert Agent");
+  const [modelUsed, setModelUsed] = useState("LxGuard.AI");
   const [currentStatus, setCurrentStatus] = useState("Analyzing...");
   const abortControllerRef = useRef<AbortController | null>(null);
   const readerRef = useRef<ReadableStreamDefaultReader<Uint8Array> | null>(null);
@@ -277,7 +277,7 @@ const Index = () => {
           const errorMessage: Message = {
             id: `msg-${Date.now() + 1}`,
             role: "assistant",
-            content: "⚠️ Error processing response from Hybrid NLP-Expert Agent. Check console for details.",
+            content: "⚠️ Error processing response from LxGuard.AI. Check console for details.",
             timestamp: new Date().toLocaleTimeString(),
           };
           setMessages((prev) => [...prev, errorMessage]);
