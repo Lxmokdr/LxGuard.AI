@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: expert-agent-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn api.api_hybrid:app --host 0.0.0.0 --port $PORT
+    rootDir: Expert_Agent
+    envVars:
+      - key: DATABASE_URL
+        sync: false # User will provide Supabase URL
+      - key: REDIS_URL
+        sync: false # User will provide Upstash URL
+      - key: GEMINI_API_KEY
+        sync: false
+      - fromGroup: expert-agent-secrets
+
+envVarGroups:
+  - name: expert-agent-secrets
+    envVars:
+      - key: OLLAMA_HOST
+        value: http://your-ollama-instance
+      - key: LICENSE_KEY
+        value: dev-key-12345

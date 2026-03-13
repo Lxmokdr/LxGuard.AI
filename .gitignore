@@ -27,8 +27,6 @@ docs/*.docx
 docs/*.doc
 
 /vendor_platform/
-/chatbot-frontend/
-/admin-frontend/
 /presentation/
 /node_modules/
 /logs/

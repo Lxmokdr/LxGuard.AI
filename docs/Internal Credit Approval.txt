@@ -1,0 +1,144 @@
+﻿Internal Credit Approval & Loan Risk Assessment Policy
+Document Code: CR-RISK-004
+Version: 5.1
+Effective Date: 15 March 2025
+Department: Credit Risk & Corporate Banking
+________________
+
+
+1. Purpose
+To define standardized procedures for:
+* Retail loan approval
+
+* SME credit evaluation
+
+* Corporate loan risk assessment
+
+* Collateral valuation
+
+* Default management
+
+________________
+
+
+2. Loan Categories
+2.1 Retail Loans
+   * Personal loan
+
+   * Auto loan
+
+   * Mortgage
+
+   * Education loan
+
+2.2 SME Loans
+      * Working capital
+
+      * Equipment financing
+
+      * Trade finance
+
+2.3 Corporate Loans
+         * Term loans
+
+         * Syndicated loans
+
+         * Revolving credit facilities
+
+________________
+
+
+3. Credit Scoring Model (Retail)
+Score Components:
+            * Income stability (30%)
+
+            * Debt-to-income ratio (25%)
+
+            * Credit history (20%)
+
+            * Employment duration (15%)
+
+            * Banking behavior (10%)
+
+Minimum Approval Score: 65/100
+Automatic rejection if:
+               * DTI > 60%
+
+               * Bankruptcy record within 5 years
+
+               * Internal default history
+
+________________
+
+
+4. Collateral Requirements
+Mortgage:
+                  * Property valuation by approved appraiser
+
+                  * Loan-to-value ratio ≤ 80%
+
+Auto Loan:
+                     * Vehicle age ≤ 5 years
+
+                     * Mandatory insurance assignment to bank
+
+SME Loan:
+                        * Inventory pledge or personal guarantee required if risk score < 75
+
+________________
+
+
+5. Corporate Risk Assessment
+Corporate risk rating based on:
+                           * EBITDA stability
+
+                           * Liquidity ratios
+
+                           * Industry outlook
+
+                           * Management track record
+
+                           * Concentration risk
+
+Rating Scale:
+                              * A (Low Risk)
+
+                              * B (Moderate)
+
+                              * C (Elevated)
+
+                              * D (High Risk)
+
+                              * E (Unacceptable)
+
+Loans rated D require Risk Committee approval.
+Loans rated E must be rejected.
+________________
+
+
+6. Approval Authority Matrix
+Loan Amount
+	Approval Level
+	< 2M DZD
+	Branch Manager
+	2M–20M DZD
+	Regional Committee
+	> 20M DZD
+	Central Risk Committee
+	________________
+
+
+7. Default & Recovery
+Default defined as:
+                                 * 90 days past due (retail)
+
+                                 * 60 days past due (SME)
+
+                                 * Covenant breach (corporate)
+
+Recovery actions:
+                                    * Restructuring
+
+                                    * Collateral liquidation
+
+                                    * Legal proceedings

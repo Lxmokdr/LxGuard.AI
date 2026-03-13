@@ -17,10 +17,17 @@ def seed():
         # 0. Get Domain ID (Default or created if missing)
         domain = db.query(Domain).filter(Domain.name.ilike("%Anti-Fraud%")).first()
         if not domain:
-            domain = db.query(Domain).first()
+            print("🌱 Creating default Anti-Fraud domain...")
+            domain = Domain(
+                name="Anti-Fraud & AML",
+                description="Regulatory compliance and transaction monitoring domain"
+            )
+            db.add(domain)
+            db.commit()
+            db.refresh(domain)
         
-        domain_id = domain.id if domain else "529af299-a716-44a0-b2ea-a262a501982f"
-        print(f"📍 Using Domain: {domain.name if domain else 'Default'} ({domain_id})")
+        domain_id = domain.id
+        print(f"📍 Using Domain: {domain.name} ({domain_id})")
 
         # 1. Define Anti-Fraud Intents (Mapping AML-FRD-009 / Anti-Fraud.md Layer 1)
         intents_data = [

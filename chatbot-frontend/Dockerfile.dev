@@ -1,0 +1,15 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Expose port (Vite default is 5173)
+EXPOSE 5173
+
+# Start Vite app with host flag to expose it outside container
+CMD ["npm", "run", "dev", "--", "--host"]

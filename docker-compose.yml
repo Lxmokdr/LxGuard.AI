@@ -1,0 +1,144 @@
+version: '3.8'
+
+services:
+  # 1. Expert Agent Backend (FastAPI)
+  backend:
+    build:
+      context: ./Expert_Agent
+      dockerfile: Dockerfile
+    container_name: expert-agent-backend
+    ports:
+      - "8001:8001"
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=hybrid
+      - POSTGRES_PASSWORD=hybridpass
+      - POSTGRES_DB=hybrid_db
+      # ── License & Monitoring (set these for production) ──────────────────
+      - LICENSE_KEY=${LICENSE_KEY:-}
+      - LICENSE_SERVER_URL=${LICENSE_SERVER_URL:-}
+      - LICENSE_PUBLIC_KEY=${LICENSE_PUBLIC_KEY:-}
+      - LICENSE_CHECK_INTERVAL=${LICENSE_CHECK_INTERVAL:-300}
+      - LICENSE_FAIL_GRACE_PERIOD=${LICENSE_FAIL_GRACE_PERIOD:-86400}
+      - HEARTBEAT_INTERVAL=${HEARTBEAT_INTERVAL:-300}
+    volumes:
+      - ./Expert_Agent:/app
+      - ./docs:/app/docs
+      - instance_data:/data
+
+    depends_on:
+      - ollama
+    networks:
+      - hybrid-net
+    restart: unless-stopped
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+
+  # 2. Admin UI (Next.js)
+  admin-frontend:
+    build:
+      context: ./admin-frontend
+      dockerfile: Dockerfile.dev
+    container_name: expert-agent-admin
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./admin-frontend:/app
+      - admin_node_modules:/app/node_modules
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8001
+    depends_on:
+      - backend
+    networks:
+      - hybrid-net
+    restart: unless-stopped
+
+  # 3. Chatbot Frontend (Vite + React)
+  chatbot-frontend:
+    build:
+      context: ./chatbot-frontend
+      dockerfile: Dockerfile.dev
+    container_name: expert-agent-chatbot
+    ports:
+      - "5173:8080" # Map to Vite dev server's configured 8080 port
+    volumes:
+      - ./chatbot-frontend:/app
+      - chatbot_node_modules:/app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - hybrid-net
+    restart: unless-stopped
+
+  # 4. Ollama (Inference Engine)
+  # NOTE: In production, this might run on a separate GPU server.
+  # For Docker Compose, we use the CPU-only image or pass GPU if avail.
+  ollama:
+    image: ollama/ollama:latest
+    container_name: expert-agent-ollama
+    ports:
+      - "11435:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - hybrid-net
+    restart: unless-stopped
+
+  # 4. Storage & Auth
+  postgres:
+    image: pgvector/pgvector:pg15
+    # This image includes pgvector by default.
+    container_name: expert-agent-db
+    environment:
+      POSTGRES_USER: hybrid
+      POSTGRES_PASSWORD: hybridpass
+      POSTGRES_DB: hybrid_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - hybrid-net
+    restart: unless-stopped
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0
+    container_name: expert-agent-auth
+    command: start-dev
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    networks:
+      - hybrid-net
+    restart: unless-stopped
+
+  redis:
+    image: redis:7
+    container_name: expert-agent-cache
+    ports:
+      - "6379:6379"
+    networks:
+      - hybrid-net
+    restart: unless-stopped
+
+networks:
+  hybrid-net:
+    name: hybrid-shared-net
+    driver: bridge
+
+volumes:
+  ollama_data:
+  pgdata:
+  backend_packages:
+  admin_node_modules:
+  chatbot_node_modules:
+  instance_data:
+    # Persists /data/instance_id across container restarts
+
+
+
