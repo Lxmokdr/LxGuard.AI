@@ -1,0 +1,237 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://hybrid-nlp-expert-agent.com/schemas/reasoning_trace.schema.json",
+    "title": "Reasoning Trace Schema",
+    "description": "Canonical schema for 8-layer reasoning traces",
+    "type": "object",
+    "required": [
+        "query",
+        "timestamp",
+        "layers",
+        "final_answer",
+        "metadata"
+    ],
+    "properties": {
+        "query": {
+            "type": "string",
+            "description": "Original user query"
+        },
+        "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When this trace was generated"
+        },
+        "layers": {
+            "type": "object",
+            "description": "Traces from all 8 layers",
+            "required": [
+                "layer1_nlp",
+                "layer2_expert",
+                "layer3_arbitration",
+                "layer4_retrieval",
+                "layer5_planning",
+                "layer6_generation",
+                "layer7_validation",
+                "layer8_explainability"
+            ],
+            "properties": {
+                "layer1_nlp": {
+                    "type": "object",
+                    "description": "NLP Core analysis",
+                    "properties": {
+                        "intent_hypotheses": {
+                            "type": "array"
+                        },
+                        "keywords": {
+                            "type": "array"
+                        },
+                        "entities": {
+                            "type": "array"
+                        },
+                        "language": {
+                            "type": "string"
+                        },
+                        "confidence": {
+                            "type": "number"
+                        }
+                    }
+                },
+                "layer2_expert": {
+                    "type": "object",
+                    "description": "Expert Agent validation",
+                    "properties": {
+                        "validated_intent": {
+                            "type": "string"
+                        },
+                        "applicable_rules": {
+                            "type": "array"
+                        },
+                        "ontology_check": {
+                            "type": "object"
+                        },
+                        "risk_assessment": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "layer3_arbitration": {
+                    "type": "object",
+                    "description": "Intent Arbitration decision",
+                    "properties": {
+                        "final_intent": {
+                            "type": "string"
+                        },
+                        "confidence": {
+                            "type": "number"
+                        },
+                        "reason": {
+                            "type": "string"
+                        },
+                        "rejected_intents": {
+                            "type": "array"
+                        },
+                        "conflicts_resolved": {
+                            "type": "array"
+                        }
+                    }
+                },
+                "layer4_retrieval": {
+                    "type": "object",
+                    "description": "Document retrieval trace",
+                    "properties": {
+                        "tier1_symbolic": {
+                            "type": "object"
+                        },
+                        "tier2_semantic": {
+                            "type": "object"
+                        },
+                        "tier3_evidence_scoring": {
+                            "type": "object"
+                        },
+                        "grounding_assessment": {
+                            "type": "object"
+                        },
+                        "final_documents": {
+                            "type": "array"
+                        }
+                    }
+                },
+                "layer5_planning": {
+                    "type": "object",
+                    "description": "Answer planning",
+                    "properties": {
+                        "plan": {
+                            "type": "object"
+                        },
+                        "validation_result": {
+                            "type": "object"
+                        },
+                        "structure_type": {
+                            "type": "string"
+                        },
+                        "constraints": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "layer6_generation": {
+                    "type": "object",
+                    "description": "LLM generation",
+                    "properties": {
+                        "model": {
+                            "type": "string"
+                        },
+                        "temperature": {
+                            "type": "number"
+                        },
+                        "tokens_used": {
+                            "type": "integer"
+                        },
+                        "generation_time_ms": {
+                            "type": "number"
+                        }
+                    }
+                },
+                "layer7_validation": {
+                    "type": "object",
+                    "description": "Answer validation",
+                    "properties": {
+                        "semantic_validation": {
+                            "type": "object"
+                        },
+                        "rule_compliance": {
+                            "type": "object"
+                        },
+                        "evidence_grounding": {
+                            "type": "object"
+                        },
+                        "final_verdict": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "layer8_explainability": {
+                    "type": "object",
+                    "description": "Explainability metadata",
+                    "properties": {
+                        "trace_id": {
+                            "type": "string"
+                        },
+                        "explainability_score": {
+                            "type": "number"
+                        },
+                        "key_decisions": {
+                            "type": "array"
+                        }
+                    }
+                }
+            }
+        },
+        "final_answer": {
+            "type": "object",
+            "description": "Final answer and metadata",
+            "required": [
+                "text",
+                "valid"
+            ],
+            "properties": {
+                "text": {
+                    "type": "string"
+                },
+                "valid": {
+                    "type": "boolean"
+                },
+                "citations": {
+                    "type": "array"
+                },
+                "confidence": {
+                    "type": "number"
+                }
+            }
+        },
+        "metadata": {
+            "type": "object",
+            "description": "Trace metadata",
+            "properties": {
+                "user_id": {
+                    "type": "string"
+                },
+                "user_role": {
+                    "type": "string"
+                },
+                "session_id": {
+                    "type": "string"
+                },
+                "total_time_ms": {
+                    "type": "number"
+                },
+                "deterministic_mode": {
+                    "type": "boolean"
+                },
+                "version": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

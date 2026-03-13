@@ -1,0 +1,87 @@
+# Answer Templates
+# Defines structured output formats for specific intents
+
+templates:
+  ProjectInitialization:
+    structure: "step_by_step"
+    steps:
+      - "Prerequisites check"
+      - "Installation command"
+      - "Project creation"
+      - "Development server start"
+      - "Verification"
+    max_length: 300
+    must_include: ["code_example", "verification_step"]
+    must_exclude: ["deployment", "production"]
+
+  EnvironmentSetup:
+    structure: "step_by_step"
+    steps:
+      - "Prerequisites"
+      - "Installation"
+      - "Verification"
+    max_length: 250
+    must_include: ["code_example"]
+    must_exclude: ["deployment"]
+
+  Rendering:
+    structure: "conceptual_then_example"
+    steps:
+      - "Concept explanation"
+      - "Difference between SSR/CSR"
+      - "Code example"
+      - "Best practices"
+    max_length: 300
+    must_include: ["code_example", "comparison"]
+    must_exclude: ["deployment"]
+
+  ComponentDevelopment:
+    structure: "example_driven"
+    steps:
+      - "Component overview"
+      - "Code example"
+      - "Usage example"
+      - "Best practices"
+    max_length: 250
+    must_include: ["code_example"]
+    must_exclude: ["deployment"]
+
+  Functions:
+    structure: "conceptual_then_example"
+    steps:
+      - "Function Concept"
+      - "Serverless vs Edge"
+      - "Code example"
+      - "Usage cases"
+    max_length: 300
+    must_include: ["code_example"]
+    must_exclude: ["deployment"]
+
+  Deployment:
+    structure: "step_by_step"
+    steps:
+      - "Build preparation"
+      - "Deployment steps"
+      - "Environment configuration"
+      - "Verification"
+    max_length: 300
+    must_include: ["code_example", "verification_step"]
+    must_exclude: ["create", "initialize", "setup"]
+
+  SystemArchitecture:
+    structure: "conceptual_then_example"
+    steps:
+      - "Architecture overview"
+      - "Layer breakdown"
+      - "Neuro-symbolic integration"
+      - "Explainability and Audit"
+    max_length: 400
+    must_include: ["explanation", "layer_description"]
+    must_exclude: ["setup", "deployment"]
+
+  General:
+    structure: "flexible"
+    steps: ["Answer the question directly"]
+    max_length: 200
+    must_include: []
+    must_exclude: []

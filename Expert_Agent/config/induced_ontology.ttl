@@ -1,0 +1,123 @@
+@prefix ex: <http://expert-agent.ai/ontology/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ex:Code a owl:Class ;
+    rdfs:label "Code *" ;
+    ex:derivedFrom """**Code Quality:**  
+  `npm run lint` → Analyzes code for errors, warnings, or configuration issues.  
+  """ ;
+    ex:run ex:lint .
+
+ex:Commands a owl:Class ;
+    rdfs:label "Commands" ;
+    ex:derivedFrom """**Expert Agent hint:**  
+> - Commands are linked to stages: development, production, code quality.  
+""" ;
+    ex:link ex: .
+
+ex:Development a owl:Class ;
+    rdfs:label "Development" ;
+    ex:derivedFrom """
+- **Development:**  
+  `npm run dev` → Starts a local development server for real-time testing.
+
+- **Production:**  
+  `npm run build` → Builds the application and generates an optimized version.  
+  """ ;
+    ex:run ex:dev .
+
+ex:Next_js a owl:Class ;
+    rdfs:label "Next.js" ;
+    ex:derivedFrom """
+Next.js provides several command-line commands used at different stages of development.
+
+""" ;
+    ex:provide ex:several_command_line_different_commands .
+
+ex:Project_creation rdfs:label "> Project creation" ;
+    ex:be ex:initial_stage ;
+    ex:derivedFrom """**Expert Agent hint:**  
+> - Project creation is the initial stage before development.  
+""" .
+
+ex:Restart a owl:Class ;
+    rdfs:label "Restart" ;
+    ex:derivedFrom """Restart the server using **`npm run dev`**.  
+""" ;
+    ex:run ex:server .
+
+ex:Sequence_rules rdfs:label "> Sequence rules" ;
+    ex:build ex:deployment ;
+    ex:derivedFrom """> - Sequence rules: build → start for deployment.  
+> - Common problems and remedies can guide reasoning and troubleshooting.
+""" .
+
+ex:This a owl:Class ;
+    rdfs:label "This" ;
+    ex:be ex:test_document ;
+    ex:derivedFrom """This is a test document.
+""" .
+
+ex:Verification_steps a owl:Class ;
+    rdfs:label "Verification steps" ;
+    ex:derivedFrom """> - Verification steps follow the sequence: create → configure → restart → check logs.
+""" ;
+    ex:follow ex:sequence .
+
+ex:next_command rdfs:label "next * command" ;
+    ex:derivedFrom """
+The **`create-next-app`** command initializes a new Next.js project.
+
+""" ;
+    ex:initialize ex:next_app .
+
+ex:next_config_js_file rdfs:label "* next.config.js file" ;
+    ex:configure ex:Next_js_application ;
+    ex:derivedFrom """
+The file **`next.config.js`** configures your Next.js application.
+
+""" .
+
+ex:npm rdfs:label "npm" ;
+    ex:derivedFrom """- Start the development server after creation: `npm run dev` → Verify application runs in the browser.
+
+""",
+        """`npm run start` → Runs the application in production mode.  
+  """ ;
+    ex:run ex:development_server,
+        ex:start .
+
+ex: rdfs:label "*",
+        ">" ;
+    ex:derivedFrom """> - Ensure a recent version of **Node.js** is installed before starting.
+""" ;
+    ex:ensure ex:recent_version .
+
+ex:Next_js_application a owl:Class ;
+    rdfs:label "Next.js application" .
+
+ex:deployment rdfs:label "deployment" .
+
+ex:dev rdfs:label "dev" .
+
+ex:development_server rdfs:label "development server" .
+
+ex:initial_stage rdfs:label "initial stage" .
+
+ex:lint rdfs:label "lint" .
+
+ex:next_app rdfs:label "next app" .
+
+ex:recent_version rdfs:label "recent version" .
+
+ex:sequence rdfs:label "sequence" .
+
+ex:server rdfs:label "server" .
+
+ex:several_command_line_different_commands rdfs:label "several command line different commands" .
+
+ex:start rdfs:label "start" .
+
+ex:test_document rdfs:label "test document" .
+

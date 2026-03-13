@@ -1,0 +1,94 @@
+# Concept Ontology
+# Defines the hierarchy and relationships between domain concepts
+
+concepts:
+  - name: "ProjectInitialization"
+    parent: "Setup"
+    requires: ["Node.js", "npm"]
+    excludes: ["Deployment", "Docker", "Production"]
+    priority: 10
+    specificity: "high"
+
+  - name: "EnvironmentSetup"
+    parent: "Setup"
+    requires: ["Node.js"]
+    excludes: ["Deployment"]
+    priority: 9
+    specificity: "high"
+
+  - name: "ComponentDevelopment"
+    parent: "Development"
+    requires: ["ProjectInitialization"]
+    excludes: ["Deployment"]
+    priority: 7
+    specificity: "medium"
+
+  - name: "Routing"
+    parent: "Development"
+    requires: ["ProjectInitialization"]
+    excludes: []
+    priority: 7
+    specificity: "medium"
+
+  - name: "DataFetching"
+    parent: "Development"
+    requires: ["ProjectInitialization"]
+    excludes: []
+    priority: 7
+    specificity: "medium"
+
+  - name: "Rendering"
+    parent: "Development"
+    requires: ["ProjectInitialization"]
+    excludes: []
+    priority: 8
+    specificity: "high"
+
+  - name: "Styling"
+    parent: "Development"
+    requires: ["ProjectInitialization"]
+    excludes: []
+    priority: 5
+    specificity: "low"
+
+  - name: "Functions"
+    parent: "Development"
+    requires: ["ProjectInitialization"]
+    excludes: []
+    priority: 7
+    specificity: "medium"
+
+  - name: "Configuration"
+    parent: "Setup"
+    requires: ["ProjectInitialization"]
+    excludes: []
+    priority: 6
+    specificity: "medium"
+
+  - name: "Deployment"
+    parent: "Operations"
+    requires: ["ProjectInitialization", "Build"]
+    excludes: ["Setup"]
+    priority: 8
+    specificity: "high"
+
+  - name: "SystemArchitecture"
+    parent: "Operations"
+    requires: []
+    excludes: ["Setup"]
+    priority: 10
+    specificity: "high"
+
+  - name: "KnowledgeQuery"
+    parent: "Operations"
+    requires: []
+    excludes: []
+    priority: 5
+    specificity: "medium"
+
+  - name: "General"
+    parent: null
+    requires: []
+    excludes: []
+    priority: 1
+    specificity: "low"

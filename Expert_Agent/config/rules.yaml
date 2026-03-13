@@ -1,0 +1,138 @@
+# Production Rules
+# Defines IF-THEN rules for intent handling and document filtering
+
+rules:
+  - id: "RULE_PROJECT_INIT"
+    triggers: ["ProjectInitialization"]
+    action:
+      topic: "setup"
+      required_docs: ["installation.md", "create_next_app.md"]
+      forbidden_docs: ["deployment.md"]
+      answer_structure: "step_by_step"
+    priority: 10
+    description: "Project initialization requires setup docs, forbids deployment"
+    excludes: ["Deployment", "Docker", "Production"]
+
+  - id: "RULE_ENVIRONMENT_SETUP"
+    triggers: ["EnvironmentSetup"]
+    allowed_roles: ["admin", "employee"]
+    action:
+      topic: "setup"
+      required_docs: ["installation.md", "basic_commands.md"]
+      forbidden_docs: ["deployment.md"]
+      answer_structure: "step_by_step"
+    priority: 9
+    description: "Environment setup requires installation docs"
+    excludes: ["Deployment"]
+
+  - id: "RULE_DEPLOYMENT"
+    triggers: ["Deployment"]
+    allowed_roles: ["admin", "employee"] # Guests cannot see deployment info
+    action:
+      topic: "operations"
+      required_docs: ["deployment.md"]
+      forbidden_docs: ["create_next_app.md", "installation.md"]
+      answer_structure: "step_by_step"
+    priority: 8
+    description: "Deployment requires operations docs, forbids setup"
+    excludes: ["Setup", "ProjectInitialization"]
+
+  - id: "RULE_RENDERING"
+    triggers: ["Rendering"]
+    action:
+      topic: "functions"
+      required_docs: ["rendering.md"]
+      forbidden_docs: ["deployment.md"]
+      answer_structure: "conceptual_then_example"
+    priority: 8
+    description: "Rendering questions require rendering guide"
+    excludes: ["Deployment"]
+
+  - id: "RULE_COMPONENTS"
+    triggers: ["ComponentDevelopment"]
+    action:
+      topic: "components"
+      required_docs: ["components.md"]
+      forbidden_docs: ["deployment.md"]
+      answer_structure: "example_driven"
+    priority: 7
+    description: "Component questions require component guide"
+    excludes: ["Deployment"]
+
+  - id: "RULE_ROUTING"
+    triggers: ["Routing"]
+    action:
+      topic: "routing"
+      required_docs: ["routing.md", "api_routes.md", "middleware.md"]
+      forbidden_docs: []
+      answer_structure: "conceptual_then_example"
+    priority: 7
+    description: "Routing questions require routing guide"
+    excludes: []
+
+  - id: "RULE_FUNCTIONS"
+    triggers: ["Functions"]
+    action:
+      topic: "functions"
+      required_docs: ["functions.md"]
+      forbidden_docs: ["deployment.md"]
+      answer_structure: "conceptual_then_example"
+    priority: 8
+    description: "Function questions require functions guide"
+    excludes: ["Deployment"]
+
+  - id: "RULE_DATA_FETCHING"
+    triggers: ["DataFetching"]
+    action:
+      topic: "functions"
+      required_docs: ["functions.md", "api_routes.md"]
+      forbidden_docs: []
+      answer_structure: "example_driven"
+    priority: 7
+    description: "Data fetching requires functions guide"
+    excludes: []
+
+  - id: "RULE_CONFIGURATION"
+    triggers: ["Configuration"]
+    action:
+      topic: "configuration"
+      required_docs: [] 
+      forbidden_docs: []
+      answer_structure: "reference"
+    priority: 6
+    description: "Configuration questions require config guide"
+    excludes: []
+
+  - id: "RULE_SYSTEM_ARCH"
+    triggers: ["SystemArchitecture"]
+    action:
+      topic: "configuration"
+      required_docs: ["ARCHITECTURE.md"]
+      forbidden_docs: []
+      answer_structure: "conceptual_then_example"
+    priority: 10
+    description: "Questions about system architecture require ARCHITECTURE.md"
+    excludes: ["Setup"]
+
+  - id: "RULE_KNOWLEDGE_QUERY"
+    triggers: ["KnowledgeQuery"]
+    action:
+      topic: "general"
+      required_docs: []
+      forbidden_docs: []
+      answer_structure: "direct_and_grounded"
+    priority: 5
+    description: "Rule for general knowledge queries grounded in discovered documents"
+    excludes: []
+
+  - id: "RULE_SECRET_PROTECTION"
+    triggers: ["ConfidentialQuery", "General"]
+    action:
+      topic: "security"
+      required_docs: []
+      forbidden_docs: ["test.txt"]
+      answer_structure: "flexible"
+      message: "I am not authorized to reveal secret information."
+    priority: 11
+    description: "Blocks revelation of secrets like 'coffee'"
+    excludes: ["secret", "coffee"]

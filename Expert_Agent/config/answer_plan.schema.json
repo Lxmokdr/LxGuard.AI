@@ -1,0 +1,184 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://hybrid-nlp-expert-agent.com/schemas/answer_plan.schema.json",
+    "title": "Answer Plan Schema",
+    "description": "Formal schema for answer plans that constrain LLM generation",
+    "type": "object",
+    "required": [
+        "goal",
+        "structure_type",
+        "steps",
+        "constraints"
+    ],
+    "properties": {
+        "goal": {
+            "type": "string",
+            "description": "The specific goal this answer must achieve",
+            "minLength": 10,
+            "maxLength": 500
+        },
+        "structure_type": {
+            "type": "string",
+            "description": "The required answer structure",
+            "enum": [
+                "step_by_step",
+                "conceptual_then_example",
+                "example_driven",
+                "reference",
+                "flexible"
+            ]
+        },
+        "steps": {
+            "type": "array",
+            "description": "Ordered list of steps/sections the answer must cover",
+            "minItems": 1,
+            "maxItems": 10,
+            "items": {
+                "type": "string",
+                "minLength": 5,
+                "maxLength": 200
+            }
+        },
+        "evidence": {
+            "type": "array",
+            "description": "Evidence that must be used in the answer",
+            "items": {
+                "type": "object",
+                "required": [
+                    "document",
+                    "section",
+                    "content"
+                ],
+                "properties": {
+                    "document": {
+                        "type": "string",
+                        "description": "Source document name"
+                    },
+                    "section": {
+                        "type": "string",
+                        "description": "Section within document"
+                    },
+                    "content": {
+                        "type": "string",
+                        "description": "Relevant content excerpt",
+                        "maxLength": 2000
+                    },
+                    "relevance_score": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1,
+                        "description": "Evidence relevance score"
+                    }
+                }
+            }
+        },
+        "constraints": {
+            "type": "object",
+            "description": "Hard constraints that must be enforced",
+            "required": [
+                "max_length",
+                "required_citations"
+            ],
+            "properties": {
+                "max_length": {
+                    "type": "integer",
+                    "description": "Maximum answer length in words",
+                    "minimum": 50,
+                    "maximum": 1000
+                },
+                "required_citations": {
+                    "type": "boolean",
+                    "description": "Whether citations are mandatory"
+                },
+                "must_include": {
+                    "type": "array",
+                    "description": "Terms/concepts that must appear",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "excluded_topics": {
+                    "type": "array",
+                    "description": "Topics that must not be mentioned",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "forbidden_documents": {
+                    "type": "array",
+                    "description": "Documents that must not be referenced",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "required_documents": {
+                    "type": "array",
+                    "description": "Documents that must be cited",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "tone": {
+                    "type": "string",
+                    "description": "Required tone of the answer",
+                    "enum": [
+                        "professional",
+                        "technical",
+                        "beginner-friendly",
+                        "concise"
+                    ]
+                },
+                "language": {
+                    "type": "string",
+                    "description": "Required language for the answer",
+                    "pattern": "^[a-z]{2}$"
+                }
+            }
+        },
+        "metadata": {
+            "type": "object",
+            "description": "Metadata about the plan",
+            "properties": {
+                "intent": {
+                    "type": "string",
+                    "description": "The intent this plan addresses"
+                },
+                "user_role": {
+                    "type": "string",
+                    "description": "Role of the requesting user",
+                    "enum": [
+                        "admin",
+                        "employee",
+                        "guest"
+                    ]
+                },
+                "risk_level": {
+                    "type": "string",
+                    "description": "Risk level of this answer",
+                    "enum": [
+                        "low",
+                        "medium",
+                        "high",
+                        "critical"
+                    ]
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "When this plan was created"
+                },
+                "grounding_sufficient": {
+                    "type": "boolean",
+                    "description": "Whether evidence grounding is sufficient"
+                },
+                "coverage_score": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "description": "Evidence coverage score"
+                }
+            }
+        }
+    },
+    "additionalProperties": false
+}

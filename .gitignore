@@ -1,0 +1,38 @@
+# Python / backend artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Local data and logs
+Expert_Agent/audit_db/
+*.log
+*.jsonl
+
+# OS / editor files
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Binary documents (kept locally, not in git)
+docs/*.pdf
+docs/*.docx
+docs/*.doc
+
+/vendor_platform/
+/chatbot-frontend/
+/admin-frontend/
+/presentation/
+/node_modules/
+/logs/
+/audit_db/
+*.lockb
+package-lock.json
+.env

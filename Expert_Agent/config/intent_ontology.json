@@ -1,0 +1,475 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Formal Intent Ontology",
+    "description": "Defines the complete semantic structure of intents including hierarchies, relationships, mutual exclusivity, prerequisites, and risk levels",
+    "version": "1.0.0",
+    "intents": [
+        {
+            "name": "ProjectInitialization",
+            "parent": "Setup",
+            "description": "Creating a new Next.js project from scratch",
+            "risk_level": "low",
+            "mutually_exclusive": [
+                "Deployment",
+                "Docker",
+                "Production"
+            ],
+            "prerequisites": {
+                "system_requirements": [
+                    "Node.js",
+                    "npm"
+                ],
+                "intent_requirements": []
+            },
+            "compatible_with": [
+                "EnvironmentSetup",
+                "Configuration"
+            ],
+            "priority": 10,
+            "specificity": "high",
+            "rbac_default": [
+                "admin",
+                "employee"
+            ],
+            "metadata": {
+                "category": "setup",
+                "complexity": "beginner",
+                "estimated_docs_needed": 2
+            }
+        },
+        {
+            "name": "EnvironmentSetup",
+            "parent": "Setup",
+            "description": "Setting up development environment and dependencies",
+            "risk_level": "low",
+            "mutually_exclusive": [
+                "Deployment",
+                "Production"
+            ],
+            "prerequisites": {
+                "system_requirements": [
+                    "Node.js"
+                ],
+                "intent_requirements": []
+            },
+            "compatible_with": [
+                "ProjectInitialization",
+                "Configuration"
+            ],
+            "priority": 9,
+            "specificity": "high",
+            "rbac_default": [
+                "admin",
+                "employee"
+            ],
+            "metadata": {
+                "category": "setup",
+                "complexity": "beginner",
+                "estimated_docs_needed": 2
+            }
+        },
+        {
+            "name": "ComponentDevelopment",
+            "parent": "Development",
+            "description": "Building React components in Next.js",
+            "risk_level": "low",
+            "mutually_exclusive": [
+                "Deployment"
+            ],
+            "prerequisites": {
+                "system_requirements": [],
+                "intent_requirements": [
+                    "ProjectInitialization"
+                ]
+            },
+            "compatible_with": [
+                "Routing",
+                "Styling",
+                "DataFetching"
+            ],
+            "priority": 7,
+            "specificity": "medium",
+            "rbac_default": [
+                "admin",
+                "employee"
+            ],
+            "metadata": {
+                "category": "development",
+                "complexity": "intermediate",
+                "estimated_docs_needed": 3
+            }
+        },
+        {
+            "name": "Routing",
+            "parent": "Development",
+            "description": "Next.js routing system (App Router, Pages Router)",
+            "risk_level": "low",
+            "mutually_exclusive": [],
+            "prerequisites": {
+                "system_requirements": [],
+                "intent_requirements": [
+                    "ProjectInitialization"
+                ]
+            },
+            "compatible_with": [
+                "ComponentDevelopment",
+                "DataFetching",
+                "Rendering"
+            ],
+            "priority": 7,
+            "specificity": "medium",
+            "rbac_default": [
+                "admin",
+                "employee"
+            ],
+            "metadata": {
+                "category": "development",
+                "complexity": "intermediate",
+                "estimated_docs_needed": 3
+            }
+        },
+        {
+            "name": "DataFetching",
+            "parent": "Development",
+            "description": "Fetching data in Next.js (SSR, SSG, CSR, ISR)",
+            "risk_level": "low",
+            "mutually_exclusive": [],
+            "prerequisites": {
+                "system_requirements": [],
+                "intent_requirements": [
+                    "ProjectInitialization"
+                ]
+            },
+            "compatible_with": [
+                "Routing",
+                "ComponentDevelopment",
+                "Rendering"
+            ],
+            "priority": 7,
+            "specificity": "medium",
+            "rbac_default": [
+                "admin",
+                "employee"
+            ],
+            "metadata": {
+                "category": "development",
+                "complexity": "intermediate",
+                "estimated_docs_needed": 3
+            }
+        },
+        {
+            "name": "Rendering",
+            "parent": "Development",
+            "description": "Server-side rendering, client-side rendering, and hybrid approaches",
+            "risk_level": "low",
+            "mutually_exclusive": [],
+            "prerequisites": {
+                "system_requirements": [],
+                "intent_requirements": [
+                    "ProjectInitialization"
+                ]
+            },
+            "compatible_with": [
+                "DataFetching",
+                "Routing",
+                "ComponentDevelopment"
+            ],
+            "priority": 8,
+            "specificity": "high",
+            "rbac_default": [
+                "admin",
+                "employee"
+            ],
+            "metadata": {
+                "category": "development",
+                "complexity": "advanced",
+                "estimated_docs_needed": 2
+            }
+        },
+        {
+            "name": "Styling",
+            "parent": "Development",
+            "description": "CSS, CSS Modules, Tailwind, and styling approaches",
+            "risk_level": "low",
+            "mutually_exclusive": [],
+            "prerequisites": {
+                "system_requirements": [],
+                "intent_requirements": [
+                    "ProjectInitialization"
+                ]
+            },
+            "compatible_with": [
+                "ComponentDevelopment"
+            ],
+            "priority": 5,
+            "specificity": "low",
+            "rbac_default": [
+                "admin",
+                "employee"
+            ],
+            "metadata": {
+                "category": "development",
+                "complexity": "beginner",
+                "estimated_docs_needed": 2
+            }
+        },
+        {
+            "name": "Functions",
+            "parent": "Development",
+            "description": "Server functions, API routes, and serverless functions",
+            "risk_level": "medium",
+            "mutually_exclusive": [],
+            "prerequisites": {
+                "system_requirements": [],
+                "intent_requirements": [
+                    "ProjectInitialization"
+                ]
+            },
+            "compatible_with": [
+                "DataFetching",
+                "Routing"
+            ],
+            "priority": 7,
+            "specificity": "medium",
+            "rbac_default": [
+                "admin",
+                "employee"
+            ],
+            "metadata": {
+                "category": "development",
+                "complexity": "intermediate",
+                "estimated_docs_needed": 2
+            }
+        },
+        {
+            "name": "Configuration",
+            "parent": "Setup",
+            "description": "Next.js configuration files and build settings",
+            "risk_level": "medium",
+            "mutually_exclusive": [],
+            "prerequisites": {
+                "system_requirements": [],
+                "intent_requirements": [
+                    "ProjectInitialization"
+                ]
+            },
+            "compatible_with": [
+                "EnvironmentSetup"
+            ],
+            "priority": 6,
+            "specificity": "medium",
+            "rbac_default": [
+                "admin",
+                "employee"
+            ],
+            "metadata": {
+                "category": "setup",
+                "complexity": "intermediate",
+                "estimated_docs_needed": 2
+            }
+        },
+        {
+            "name": "Deployment",
+            "parent": "Operations",
+            "description": "Deploying Next.js applications to production",
+            "risk_level": "high",
+            "mutually_exclusive": [
+                "Setup",
+                "ProjectInitialization",
+                "EnvironmentSetup"
+            ],
+            "prerequisites": {
+                "system_requirements": [],
+                "intent_requirements": [
+                    "ProjectInitialization",
+                    "Build"
+                ]
+            },
+            "compatible_with": [
+                "Production",
+                "Docker"
+            ],
+            "priority": 8,
+            "specificity": "high",
+            "rbac_default": [
+                "admin",
+                "employee"
+            ],
+            "metadata": {
+                "category": "operations",
+                "complexity": "advanced",
+                "estimated_docs_needed": 3
+            }
+        },
+        {
+            "name": "Production",
+            "parent": "Operations",
+            "description": "Production optimization, monitoring, and best practices",
+            "risk_level": "high",
+            "mutually_exclusive": [
+                "Setup",
+                "ProjectInitialization"
+            ],
+            "prerequisites": {
+                "system_requirements": [],
+                "intent_requirements": [
+                    "Deployment"
+                ]
+            },
+            "compatible_with": [
+                "Deployment",
+                "Docker"
+            ],
+            "priority": 9,
+            "specificity": "high",
+            "rbac_default": [
+                "admin"
+            ],
+            "metadata": {
+                "category": "operations",
+                "complexity": "advanced",
+                "estimated_docs_needed": 2
+            }
+        },
+        {
+            "name": "Docker",
+            "parent": "Operations",
+            "description": "Containerizing Next.js applications with Docker",
+            "risk_level": "high",
+            "mutually_exclusive": [
+                "ProjectInitialization"
+            ],
+            "prerequisites": {
+                "system_requirements": [
+                    "Docker"
+                ],
+                "intent_requirements": [
+                    "ProjectInitialization"
+                ]
+            },
+            "compatible_with": [
+                "Deployment",
+                "Production"
+            ],
+            "priority": 7,
+            "specificity": "high",
+            "rbac_default": [
+                "admin"
+            ],
+            "metadata": {
+                "category": "operations",
+                "complexity": "advanced",
+                "estimated_docs_needed": 2
+            }
+        },
+        {
+            "name": "Build",
+            "parent": "Operations",
+            "description": "Building and optimizing Next.js applications",
+            "risk_level": "medium",
+            "mutually_exclusive": [],
+            "prerequisites": {
+                "system_requirements": [],
+                "intent_requirements": [
+                    "ProjectInitialization"
+                ]
+            },
+            "compatible_with": [
+                "Deployment"
+            ],
+            "priority": 7,
+            "specificity": "medium",
+            "rbac_default": [
+                "admin",
+                "employee"
+            ],
+            "metadata": {
+                "category": "operations",
+                "complexity": "intermediate",
+                "estimated_docs_needed": 2
+            }
+        },
+        {
+            "name": "ConfidentialQuery",
+            "parent": null,
+            "description": "Questions about sensitive or confidential information like secrets",
+            "risk_level": "high",
+            "mutually_exclusive": [],
+            "prerequisites": {
+                "system_requirements": [],
+                "intent_requirements": []
+            },
+            "compatible_with": [],
+            "priority": 10,
+            "specificity": "high",
+            "rbac_default": [
+                "admin"
+            ],
+            "metadata": {
+                "category": "security",
+                "complexity": "any",
+                "estimated_docs_needed": 0
+            }
+        },
+        {
+            "name": "General",
+            "parent": null,
+            "description": "General questions about Next.js not fitting other categories",
+            "risk_level": "low",
+            "mutually_exclusive": [],
+            "prerequisites": {
+                "system_requirements": [],
+                "intent_requirements": []
+            },
+            "compatible_with": [],
+            "priority": 1,
+            "specificity": "low",
+            "rbac_default": [
+                "admin",
+                "employee",
+                "guest"
+            ],
+            "metadata": {
+                "category": "general",
+                "complexity": "any",
+                "estimated_docs_needed": 1
+            }
+        }
+    ],
+    "intent_categories": {
+        "Setup": {
+            "description": "Project initialization and environment configuration",
+            "risk_level": "low"
+        },
+        "Development": {
+            "description": "Building features and components",
+            "risk_level": "low"
+        },
+        "Operations": {
+            "description": "Deployment, production, and infrastructure",
+            "risk_level": "high"
+        }
+    },
+    "risk_levels": {
+        "low": {
+            "description": "Safe operations with minimal security implications",
+            "requires_approval": false,
+            "audit_level": "standard"
+        },
+        "medium": {
+            "description": "Operations that may affect system configuration",
+            "requires_approval": false,
+            "audit_level": "detailed"
+        },
+        "high": {
+            "description": "Operations affecting production or security-critical areas",
+            "requires_approval": true,
+            "audit_level": "comprehensive"
+        },
+        "critical": {
+            "description": "System-level operations requiring explicit authorization",
+            "requires_approval": true,
+            "audit_level": "comprehensive"
+        }
+    }
+}

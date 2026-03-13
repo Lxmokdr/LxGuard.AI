@@ -1,0 +1,203 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://hybrid-nlp-expert-agent.com/schemas/audit_log.schema.json",
+    "title": "Audit Log Schema",
+    "description": "Schema for comprehensive audit logging",
+    "type": "object",
+    "required": [
+        "log_id",
+        "timestamp",
+        "event_type",
+        "user",
+        "query",
+        "decision",
+        "trace_id"
+    ],
+    "properties": {
+        "log_id": {
+            "type": "string",
+            "description": "Unique log entry ID",
+            "pattern": "^[a-f0-9]{32}$"
+        },
+        "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When this event occurred"
+        },
+        "event_type": {
+            "type": "string",
+            "description": "Type of event",
+            "enum": [
+                "query",
+                "intent_validation",
+                "retrieval",
+                "generation",
+                "validation",
+                "rejection",
+                "error"
+            ]
+        },
+        "user": {
+            "type": "object",
+            "required": [
+                "user_id",
+                "role"
+            ],
+            "properties": {
+                "user_id": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string",
+                    "enum": [
+                        "admin",
+                        "employee",
+                        "guest"
+                    ]
+                },
+                "ip_address": {
+                    "type": "string"
+                },
+                "session_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "query": {
+            "type": "object",
+            "required": [
+                "text",
+                "language"
+            ],
+            "properties": {
+                "text": {
+                    "type": "string"
+                },
+                "language": {
+                    "type": "string"
+                },
+                "intent": {
+                    "type": "string"
+                },
+                "risk_level": {
+                    "type": "string",
+                    "enum": [
+                        "low",
+                        "medium",
+                        "high",
+                        "critical"
+                    ]
+                }
+            }
+        },
+        "decision": {
+            "type": "object",
+            "description": "Decision made by the system",
+            "required": [
+                "action",
+                "reason"
+            ],
+            "properties": {
+                "action": {
+                    "type": "string",
+                    "enum": [
+                        "approved",
+                        "rejected",
+                        "regenerated",
+                        "blocked"
+                    ]
+                },
+                "reason": {
+                    "type": "string"
+                },
+                "final_intent": {
+                    "type": "string"
+                },
+                "documents_accessed": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "rules_applied": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "trace_id": {
+            "type": "string",
+            "description": "Reference to full reasoning trace"
+        },
+        "security": {
+            "type": "object",
+            "description": "Security-related information",
+            "properties": {
+                "rbac_check": {
+                    "type": "boolean"
+                },
+                "pii_detected": {
+                    "type": "boolean"
+                },
+                "forbidden_topics": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "approval_required": {
+                    "type": "boolean"
+                },
+                "approved_by": {
+                    "type": "string"
+                }
+            }
+        },
+        "performance": {
+            "type": "object",
+            "description": "Performance metrics",
+            "properties": {
+                "total_time_ms": {
+                    "type": "number"
+                },
+                "nlp_time_ms": {
+                    "type": "number"
+                },
+                "retrieval_time_ms": {
+                    "type": "number"
+                },
+                "generation_time_ms": {
+                    "type": "number"
+                },
+                "validation_time_ms": {
+                    "type": "number"
+                }
+            }
+        },
+        "metadata": {
+            "type": "object",
+            "description": "Additional metadata",
+            "properties": {
+                "version": {
+                    "type": "string"
+                },
+                "environment": {
+                    "type": "string",
+                    "enum": [
+                        "development",
+                        "staging",
+                        "production"
+                    ]
+                },
+                "deterministic_mode": {
+                    "type": "boolean"
+                }
+            }
+        }
+    }
+}
