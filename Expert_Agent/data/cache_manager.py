@@ -29,7 +29,12 @@ class CacheManager:
     
     def __init__(self):
         if REDIS_URL:
-            self.client = redis.from_url(REDIS_URL, decode_responses=True)
+            # Ensure URL has a scheme (Upstash sometimes provides URLs without them)
+            formatted_url = REDIS_URL
+            if not any(formatted_url.startswith(s) for s in ["redis://", "rediss://", "unix://"]):
+                formatted_url = f"redis://{formatted_url}"
+            
+            self.client = redis.from_url(formatted_url, decode_responses=True)
         else:
             self.client = redis.Redis(
                 host=REDIS_HOST,
