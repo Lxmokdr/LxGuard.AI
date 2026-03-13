@@ -26,9 +26,9 @@ docs/*.pdf
 docs/*.docx
 docs/*.doc
 
-/vendor_platform/
-/presentation/
-/node_modules/
+node_modules/
+.next/
+__pycache__/
 /logs/
 /audit_db/
 *.lockb
