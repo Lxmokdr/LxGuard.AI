@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect } from "react"
-import { useAuth, apiFetch } from "../page"
-import { Plus, Ban,Trash2, CheckCircle, Copy } from "lucide-react"
+import { useAuth, apiFetch } from "../../lib/utils"
+import { Plus, Ban, Trash2, CheckCircle, Copy } from "lucide-react"
 
 export default function LicensesPage() {
     const token = useAuth()

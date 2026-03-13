@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect } from "react"
-import { useAuth, apiFetch } from "../page"
+import { useAuth, apiFetch } from "../../lib/utils"
 
 export default function MetricsPage() {
     const token = useAuth()

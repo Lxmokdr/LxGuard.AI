@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect } from "react"
-import { useAuth, apiFetch } from "../page"
+import { useAuth, apiFetch } from "../../lib/utils"
 import { Plus, Trash2 } from "lucide-react"
 
 export default function CustomersPage() {
