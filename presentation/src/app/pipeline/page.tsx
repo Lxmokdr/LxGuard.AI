@@ -1,160 +1,151 @@
 "use client";
 
-import Link from "next/link";
-import { motion } from "framer-motion";
-import {
-    ArrowLeft,
-    ShieldCheck,
-    Brain,
-    Scale,
-    Search,
-    ListTree,
-    Cpu,
-    RefreshCcw,
-    Network,
-    FileText
-} from "lucide-react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ShieldCheck, Network, Brain, Scale, Search, ListTree, Cpu, RefreshCcw, MessageCircle, CheckCircle, ChevronLeft, ChevronRight } from "lucide-react";
+import { useSlideNav } from "../useSlideNav";
 
-export default function PipelinePage() {
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        show: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.15
-            }
-        }
-    };
+const LAYERS = [
+    { num: 0, name: "Contrôle de Sécurité", icon: ShieldCheck, color: "#6366f1", desc: "RBAC & validation des requêtes" },
+    { num: 1, name: "Cœur NLP Avancé", icon: Network, color: "#818cf8", desc: "Analyse sémantique & entités nommées" },
+    { num: 2, name: "Cerveau Expert Symbolique", icon: Brain, color: "#1abc9c", desc: "Règles métier déterministes & ontologie" },
+    { num: 3, name: "Arbitrage d'Intention", icon: Scale, color: "#f59e0b", desc: "Résout conflits & bloque hors-sujet" },
+    { num: 4, name: "Recherche Hybride", icon: Search, color: "#818cf8", desc: "Symbolique + vecteur (pgvector)" },
+    { num: 5, name: "Planification Récursive", icon: ListTree, color: "#6366f1", desc: "Formatage & validation des contrats" },
+    { num: 6, name: "Génération LLM Contrôlée", icon: Cpu, color: "#a78bfa", desc: "Inférence locale basée sur les faits" },
+    { num: 7, name: "Auto-Validation & Audit", icon: RefreshCcw, color: "#34d399", desc: "Anti-hallucination & journal SIEM" },
+];
 
-    const itemVariants = {
-        hidden: { opacity: 0, x: -50 },
-        show: { opacity: 1, x: 0, transition: { duration: 0.5, ease: "easeOut" } }
-    };
+// 0=query bubble, 1-8=layers, 9=response
+const MAX_PHASE = LAYERS.length + 1;
 
-    const layers = [
-        { num: 0, name: "Contrôle de Sécurité", icon: ShieldCheck, color: "zinc", desc: "RBAC & sécurité des requêtes" },
-        { num: 1, name: "Cœur NLP Avancé", icon: Network, color: "zinc", desc: "Analyse sémantique & intentions" },
-        { num: 2, name: "Cerveau Expert Symbolique", icon: Brain, color: "emerald", desc: "Règles métier déterministes & ontologie", highlight: true },
-        { num: 3, name: "Arbitrage d'Intention", icon: Scale, color: "amber", desc: "Résout les conflits & bloque les requêtes hors sujet", highlight: true },
-        { num: 4, name: "Recherche Pilotée par Agent", icon: Search, color: "zinc", desc: "Recherche symbolique + vectorielle (pgvector)" },
-        { num: 5, name: "Planification de Réponse Récursive", icon: ListTree, color: "zinc", desc: "Structure le formatage & valide les contrats" },
-        { num: 6, name: "Génération Contrôlée (LLM)", icon: Cpu, color: "indigo", desc: "Inférence locale basée sur les faits", highlight: true },
-        { num: 7, name: "Boucle d'Auto-Validation", icon: RefreshCcw, color: "zinc", desc: "Vérificateur d'hallucinations & journalisation d'audit SIEM" },
-    ];
+function NavBar({ phase, max, onNext, onPrev }: { phase: number; max: number; onNext(): void; onPrev(): void }) {
+    return (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-5 z-50">
+            <button onClick={onPrev} className="p-3 rounded-full transition-all hover:scale-110"
+                style={{ background: "rgba(99,102,241,0.15)", border: "1px solid rgba(99,102,241,0.3)" }}>
+                <ChevronLeft className="w-5 h-5 text-indigo-400" />
+            </button>
+            <div className="flex gap-1">
+                {Array.from({ length: max + 1 }, (_, i) => (
+                    <div key={i} className={`h-1.5 rounded-full transition-all duration-200 ${i === phase ? "w-4 bg-indigo-500" : i < phase ? "w-1.5 bg-indigo-900" : "w-1.5 bg-zinc-800"}`} />
+                ))}
+            </div>
+            <button onClick={onNext} className="p-3 rounded-full transition-all hover:scale-110"
+                style={{ background: "linear-gradient(135deg,#4f46e5,#1abc9c)", boxShadow: "0 0 18px rgba(99,102,241,0.4)" }}>
+                <ChevronRight className="w-5 h-5 text-white" />
+            </button>
+        </div>
+    );
+}
 
-    const getColorClasses = (color: string, isHighlighted: boolean) => {
-        switch (color) {
-            case "emerald":
-                return "border-emerald-500/50 bg-emerald-900/20 text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.2)]";
-            case "amber":
-                return "border-amber-500/50 bg-amber-900/20 text-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.2)]";
-            case "indigo":
-                return "border-indigo-500/50 bg-indigo-900/20 text-indigo-400 shadow-[0_0_20px_rgba(99,102,241,0.2)]";
-            default:
-                return "border-zinc-800 bg-zinc-900/50 text-zinc-400";
-        }
-    };
+export default function Scene3Pipeline() {
+    const [phase, setPhase] = useState(0);
+    const { handleNext, handlePrev } = useSlideNav(phase, setPhase, MAX_PHASE, "/documents", "/architecture");
+
+    const activeLayer = phase - 1; // -1 when only query is showing
 
     return (
-        <div className="min-h-screen bg-black text-white p-8 md:p-16 relative overflow-hidden flex flex-col items-center">
-            {/* Subtle Background */}
-            <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_top_right,rgba(99,102,241,0.05),transparent_50%)] pointer-events-none"></div>
+        <div className="min-h-screen grid-bg bg-[#0a0b1a] text-white overflow-y-auto pb-28">
+            <div className="fixed inset-0 pointer-events-none opacity-60"
+                style={{ background: "radial-gradient(ellipse 70% 50% at 50% 0%, rgba(99,102,241,0.07), transparent)" }} />
 
-            <div className="w-full max-w-5xl relative z-10">
-                <div className="flex justify-between items-center mb-10">
-                    <Link
-                        href="/architecture"
-                        className="flex items-center text-zinc-400 hover:text-white transition-colors group"
-                    >
-                        <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
-                        Retour à l'Architecture
-                    </Link>
-                    <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-zinc-500 tracking-tight text-center">
-                        Le Pipeline Neuro-Symbolique à 8 Couches
-                    </h2>
-                    <Link
-                        href="/documents"
-                        className="flex items-center text-teal-400 hover:text-teal-300 transition-colors group text-sm font-medium"
-                    >
-                        Traitement des Documents
-                        <FileText className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-                    </Link>
+            <div className="relative z-10 max-w-5xl mx-auto px-6 py-10">
+                <h1 className="text-2xl sm:text-3xl font-black font-display text-gradient-indigo text-center mb-8">
+                    Pipeline Neuro-Symbolique à 8 Couches
+                </h1>
+
+                {/* Query bubble */}
+                <div className="flex justify-center mb-6">
+                    <div className="flex items-center gap-3 px-5 py-3 rounded-2xl"
+                        style={{ background: "rgba(99,102,241,0.14)", border: "1px solid rgba(99,102,241,0.28)" }}>
+                        <MessageCircle className="w-4 h-4 text-indigo-400" />
+                        <span className="text-sm text-indigo-200">« Quelle est la procédure de congé pour un cadre ? »</span>
+                    </div>
                 </div>
 
-                <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="show"
-                    className="relative pl-8 md:pl-0"
-                >
-                    {/* Vertical Connecting Line */}
-                    <div className="absolute left-[39px] md:left-1/2 md:-ml-px top-0 bottom-0 w-0.5 bg-zinc-800 rounded-full"></div>
+                {/* Pipeline */}
+                <div className="relative">
+                    {/* Vertical track */}
+                    <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px"
+                        style={{ background: "linear-gradient(to bottom, rgba(99,102,241,0.35), rgba(26,188,156,0.35))" }} />
 
-                    <div className="space-y-6">
-                        {layers.map((layer, index) => {
-                            const baseClasses = getColorClasses(layer.color, layer.highlight || false);
+                    {/* Active indicator dot — simple, no motion animation */}
+                    {activeLayer >= 0 && activeLayer < LAYERS.length && (
+                        <div className="absolute left-1/2 z-20 w-3 h-3 rounded-full -translate-x-1/2 -translate-y-1/2 transition-all duration-300"
+                            style={{
+                                top: `${(activeLayer / (LAYERS.length - 1)) * 95}%`,
+                                background: LAYERS[activeLayer].color,
+                                boxShadow: `0 0 14px ${LAYERS[activeLayer].color}`,
+                            }} />
+                    )}
 
+                    <div className="space-y-3">
+                        {LAYERS.map((layer, i) => {
+                            const isActive = activeLayer === i;
+                            const isPast = activeLayer > i;
                             return (
-                                <motion.div
-                                    key={layer.num}
-                                    variants={itemVariants}
-                                    className={`relative flex items-center justify-between md:justify-normal group ${index % 2 === 0 ? "md:flex-row-reverse" : ""
-                                        }`}
-                                >
-
-                                    {/* Timeline dot */}
-                                    <div className={`absolute left-0 md:left-1/2 w-8 h-8 -ml-4 rounded-full border-4 border-black flex items-center justify-center text-xs font-bold transition-all duration-300 z-10 ${layer.highlight ? `bg-${layer.color}-500 shadow-[0_0_15px_rgba(var(--${layer.color}-500),0.8)]` : "bg-zinc-700"
-                                        }`}>
-                                        {layer.num}
-                                    </div>
-
-                                    {/* Spacer for alternating layout on desktop */}
-                                    <div className="hidden md:block w-1/2 px-8"></div>
-
-                                    {/* Card content */}
-                                    <div className={`w-full md:w-1/2 pl-12 md:px-8 py-2 relative`}>
-                                        <div className={`p-4 rounded-xl border backdrop-blur-sm transition-all duration-500 hover:scale-[1.02] flex items-center gap-4 ${baseClasses}`}>
-                                            <div className="p-3 bg-black/40 xl:bg-transparent rounded-lg shrink-0">
-                                                <layer.icon className={`w-6 h-6 ${layer.highlight ? `text-${layer.color}-400` : "text-zinc-500"}`} />
+                                <div key={layer.num}
+                                    className={`flex items-center gap-4 ${i % 2 === 0 ? "flex-row" : "flex-row-reverse"}`}>
+                                    <div className="w-1/2 flex" style={{ justifyContent: i % 2 === 0 ? "flex-end" : "flex-start" }}>
+                                        <div className="w-full max-w-[360px] glass-card rounded-xl p-4 flex items-center gap-3 transition-all duration-300"
+                                            style={{
+                                                borderColor: isActive || isPast ? `${layer.color}45` : "rgba(63,63,70,0.35)",
+                                                background: isActive ? `${layer.color}10` : isPast ? `${layer.color}05` : "rgba(20,20,26,0.5)",
+                                                boxShadow: isActive ? `0 0 20px ${layer.color}25` : "none",
+                                                opacity: phase < 1 ? 0.2 : 1,
+                                            }}>
+                                            <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                                                style={{ background: isActive || isPast ? `${layer.color}18` : "rgba(39,39,42,0.7)" }}>
+                                                {isPast
+                                                    ? <CheckCircle className="w-5 h-5" style={{ color: layer.color }} />
+                                                    : <layer.icon className="w-5 h-5" style={{ color: isActive ? layer.color : "#52525b" }} />}
                                             </div>
                                             <div>
-                                                <h3 className={`text-lg font-bold mb-1 ${layer.highlight ? "text-white" : "text-zinc-200"}`}>
-                                                    Couche {layer.num}: {layer.name}
-                                                </h3>
-                                                <p className={`text-sm leading-snug ${layer.highlight ? `text-${layer.color}-200/80` : "text-zinc-500"}`}>
-                                                    {layer.desc}
-                                                </p>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-xs font-bold px-1.5 py-0.5 rounded" style={{ background: `${layer.color}18`, color: layer.color }}>L{layer.num}</span>
+                                                    <span className={`text-sm font-semibold ${isActive ? "text-white" : isPast ? "text-zinc-300" : "text-zinc-600"}`}>{layer.name}</span>
+                                                </div>
+                                                <p className="text-xs text-zinc-600 mt-0.5">{layer.desc}</p>
                                             </div>
                                         </div>
                                     </div>
-                                </motion.div>
+                                    {/* Timeline dot */}
+                                    <div className="w-4 h-4 rounded-full shrink-0 z-10 border-2 border-[#0a0b1a] transition-all duration-300"
+                                        style={{ background: isActive || isPast ? layer.color : "#3f3f46" }} />
+                                    <div className="w-1/2" />
+                                </div>
                             );
                         })}
                     </div>
-                </motion.div>
+                </div>
 
-                {/* Highlight Legend */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1.5, duration: 0.8 }}
-                    className="mt-16 flex flex-wrap justify-center gap-6"
-                >
-                    <div className="flex items-center gap-2 text-sm text-zinc-400">
-                        <span className="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]"></span>
-                        Focus Déterministe
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-zinc-400">
-                        <span className="w-3 h-3 rounded-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]"></span>
-                        Garde-fou de Politique
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-zinc-400">
-                        <span className="w-3 h-3 rounded-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]"></span>
-                        Focus Génératif
-                    </div>
-                </motion.div>
+                {/* Response bubble */}
+                <AnimatePresence>
+                    {phase >= MAX_PHASE && (
+                        <motion.div key="resp" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
+                            className="mt-6 flex justify-center">
+                            <div className="flex items-center gap-3 px-5 py-3 rounded-2xl"
+                                style={{ background: "rgba(26,188,156,0.11)", border: "1px solid rgba(26,188,156,0.28)" }}>
+                                <CheckCircle className="w-4 h-4 text-teal-400" />
+                                <span className="text-sm text-teal-200">Réponse vérifiée · Sources citées · Traitement sécurisé</span>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
 
+                {/* Legend */}
+                <div className="flex flex-wrap items-center justify-center gap-4 mt-6">
+                    {[{ color: "#1abc9c", label: "Déterministe" }, { color: "#f59e0b", label: "Garde-fou" }, { color: "#a78bfa", label: "Génératif" }].map(l => (
+                        <div key={l.label} className="flex items-center gap-2 text-xs text-zinc-500">
+                            <div className="w-2 h-2 rounded-full" style={{ background: l.color }} />
+                            {l.label}
+                        </div>
+                    ))}
+                </div>
             </div>
+
+            <NavBar phase={phase} max={MAX_PHASE} onNext={handleNext} onPrev={handlePrev} />
         </div>
     );
 }

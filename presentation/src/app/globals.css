@@ -1,17 +1,378 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* === Design Tokens — matched to LxGuard.AI frontend === */
 :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-display: 'Poppins', 'Inter', sans-serif;
+
+    /* Primary — indigo (246 80% 60%) */
+    --indigo-glow: rgba(99, 102, 241, 0.6);
+    --indigo-soft: rgba(99, 102, 241, 0.15);
+
+    /* Teal accent */
+    --teal: #1abc9c;
+    --teal-glow: rgba(26, 188, 156, 0.5);
+    --teal-soft: rgba(26, 188, 156, 0.12);
+
+    /* Gold accent */
+    --gold: #f1c40f;
+    --gold-glow: rgba(241, 196, 15, 0.5);
+    --gold-soft: rgba(241, 196, 15, 0.12);
+
+    /* Deep blue bg */
+    --blue-deep: #0a0b1a;
+    --blue-mid: #0d1030;
+    --blue-panel: rgba(13, 16, 48, 0.85);
+
+    /* Zinc surface (matches frontend cards) */
+    --surface: rgba(24, 24, 27, 0.85);
+    --surface-border: rgba(63, 63, 70, 0.5);
+
+    /* Text */
+    --text-primary: #f4f4f5;
+    --text-secondary: #a1a1aa;
+    --text-muted: #52525b;
 }
 
+/* === Base === */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
 body {
-    color: rgb(var(--foreground-rgb));
-    background: linear-gradient(to bottom,
-            transparent,
-            rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
-    font-family: system-ui, -apple-system, sans-serif;
+    font-family: var(--font-sans);
+    background: var(--blue-deep);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* === Custom Keyframes === */
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-12px);
+    }
+}
+
+@keyframes floatSlow {
+
+    0%,
+    100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-8px) rotate(3deg);
+    }
+}
+
+@keyframes pulseGlow {
+
+    0%,
+    100% {
+        opacity: 0.4;
+        filter: blur(20px);
+    }
+
+    50% {
+        opacity: 0.8;
+        filter: blur(28px);
+    }
+}
+
+@keyframes pulseRing {
+    0% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+
+    100% {
+        transform: scale(2.2);
+        opacity: 0;
+    }
+}
+
+@keyframes drift {
+    0% {
+        transform: translate(0px, 0px) scale(1);
+    }
+
+    33% {
+        transform: translate(30px, -20px) scale(1.05);
+    }
+
+    66% {
+        transform: translate(-20px, 15px) scale(0.95);
+    }
+
+    100% {
+        transform: translate(0px, 0px) scale(1);
+    }
+}
+
+@keyframes scanLine {
+    0% {
+        top: -4%;
+        opacity: 1;
+    }
+
+    100% {
+        top: 104%;
+        opacity: 0;
+    }
+}
+
+@keyframes glitch {
+
+    0%,
+    100% {
+        clip-path: inset(0 0 98% 0);
+        transform: translateX(0);
+    }
+
+    20% {
+        clip-path: inset(30% 0 60% 0);
+        transform: translateX(-4px);
+    }
+
+    40% {
+        clip-path: inset(60% 0 20% 0);
+        transform: translateX(4px);
+    }
+
+    60% {
+        clip-path: inset(10% 0 80% 0);
+        transform: translateX(-2px);
+    }
+
+    80% {
+        clip-path: inset(80% 0 5% 0);
+        transform: translateX(2px);
+    }
+}
+
+@keyframes dataFlow {
+    0% {
+        stroke-dashoffset: 300;
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        stroke-dashoffset: 0;
+        opacity: 0;
+    }
+}
+
+@keyframes orbitPing {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(2.5);
+        opacity: 0;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% center;
+    }
+
+    100% {
+        background-position: 200% center;
+    }
+}
+
+@keyframes heartbeat {
+
+    0%,
+    100% {
+        transform: scaleX(1);
+        opacity: 1;
+    }
+
+    10% {
+        transform: scaleX(1.5);
+        opacity: 1;
+    }
+
+    20% {
+        transform: scaleX(0.9);
+        opacity: 0.8;
+    }
+
+    30% {
+        transform: scaleX(1.3);
+        opacity: 1;
+    }
+
+    40% {
+        transform: scaleX(1);
+        opacity: 0.9;
+    }
+}
+
+@keyframes tickerScroll {
+    0% {
+        transform: translateX(0%);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+@keyframes rain {
+    0% {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 0.6;
+    }
+
+    90% {
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+}
+
+/* === Utility Classes === */
+
+.font-display {
+    font-family: var(--font-display);
+}
+
+.text-gradient-indigo {
+    background: linear-gradient(135deg, #818cf8, #a5b4fc, #c7d2fe);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.text-gradient-teal {
+    background: linear-gradient(135deg, #1abc9c, #48d1b5, #2dd4bf);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.text-gradient-gold {
+    background: linear-gradient(135deg, #f1c40f, #f39c12, #ffd700);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.text-gradient-hero {
+    background: linear-gradient(135deg, #fff 0%, #c7d2fe 40%, #1abc9c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.glass-card {
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+.glow-indigo {
+    box-shadow: 0 0 24px var(--indigo-glow);
+}
+
+.glow-teal {
+    box-shadow: 0 0 24px var(--teal-glow);
+}
+
+.glow-gold {
+    box-shadow: 0 0 24px var(--gold-glow);
+}
+
+.animate-float {
+    animation: float 4s ease-in-out infinite;
+}
+
+.animate-float-slow {
+    animation: floatSlow 6s ease-in-out infinite;
+}
+
+.animate-drift {
+    animation: drift 10s ease-in-out infinite;
+}
+
+.animate-heartbeat {
+    animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+.animate-shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
+}
+
+.animate-scan-line {
+    animation: scanLine 3s linear infinite;
+}
+
+/* Scene layout helpers */
+.scene-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: var(--blue-deep);
+}
+
+/* Nav dots */
+.scene-nav {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+/* Particle grid bg */
+.grid-bg {
+    background-image:
+        linear-gradient(rgba(99, 102, 241, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99, 102, 241, 0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
 }

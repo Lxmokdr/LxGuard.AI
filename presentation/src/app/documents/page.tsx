@@ -1,133 +1,138 @@
 "use client";
 
-import Link from "next/link";
-import { motion } from "framer-motion";
-import {
-    ArrowLeft,
-    FileText,
-    FolderSync,
-    Scissors,
-    Database,
-    Search,
-    ArrowRight,
-    RefreshCcw
-} from "lucide-react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FileText, Scissors, Database, CheckCircle, ChevronLeft, ChevronRight } from "lucide-react";
+import { useSlideNav } from "../useSlideNav";
 
-export default function DocumentsPage() {
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        show: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.2
-            }
-        }
-    };
+const CHUNKS = ["Art. 47 - Congé", "Procédure RH §3", "Décret 2021-112", "Guide interne", "Contrat cadre", "Annexe B"];
+const NODES = [
+    { x: 18, y: 22 }, { x: 38, y: 12 }, { x: 62, y: 28 }, { x: 82, y: 18 },
+    { x: 12, y: 58 }, { x: 32, y: 68 }, { x: 54, y: 52 }, { x: 76, y: 62 },
+    { x: 28, y: 82 }, { x: 62, y: 78 }, { x: 84, y: 48 }, { x: 50, y: 45 },
+];
+const ACTIVE = new Set([2, 5, 7, 11]);
+const STEPS = [
+    { num: 1, icon: FileText, label: "Importation", desc: "PDFs détectés auto (Watchdog)", color: "#6366f1" },
+    { num: 2, icon: Scissors, label: "Smart Chunking", desc: "Segments avec overlap config", color: "#1abc9c" },
+    { num: 3, icon: Database, label: "Vectorisation", desc: "pgvector → réseau de connaissances", color: "#f1c40f" },
+];
+const MAX_PHASE = 3;
 
-    const itemVariants = {
-        hidden: { opacity: 0, y: 30 },
-        show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
-    };
+function NavBar({ phase, max, onNext, onPrev }: { phase: number; max: number; onNext(): void; onPrev(): void }) {
+    return (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-5 z-50">
+            <button onClick={onPrev} className="p-3 rounded-full transition-all hover:scale-110"
+                style={{ background: "rgba(26,188,156,0.15)", border: "1px solid rgba(26,188,156,0.3)" }}>
+                <ChevronLeft className="w-5 h-5 text-teal-400" />
+            </button>
+            <div className="flex gap-1.5">
+                {Array.from({ length: max + 1 }, (_, i) => (
+                    <div key={i} className={`h-1.5 rounded-full transition-all duration-200 ${i === phase ? "w-5 bg-teal-500" : i < phase ? "w-2 bg-teal-900" : "w-2 bg-zinc-800"}`} />
+                ))}
+            </div>
+            <button onClick={onNext} className="p-3 rounded-full transition-all hover:scale-110"
+                style={{ background: "linear-gradient(135deg,#4f46e5,#1abc9c)", boxShadow: "0 0 18px rgba(26,188,156,0.35)" }}>
+                <ChevronRight className="w-5 h-5 text-white" />
+            </button>
+        </div>
+    );
+}
+
+export default function Scene4Knowledge() {
+    const [phase, setPhase] = useState(0);
+    const { handleNext, handlePrev } = useSlideNav(phase, setPhase, MAX_PHASE, "/chatbot", "/pipeline");
 
     return (
-        <div className="min-h-screen bg-black text-white p-8 md:p-16 relative overflow-hidden flex flex-col items-center">
-            {/* Background Flow */}
-            <div className="absolute top-1/2 left-0 w-full h-96 bg-gradient-to-r from-emerald-900/10 via-teal-900/10 to-indigo-900/10 blur-3xl -translate-y-1/2 pointer-events-none"></div>
+        <div className="min-h-screen grid-bg bg-[#0a0b1a] text-white overflow-y-auto pb-28">
+            <div className="absolute inset-0 pointer-events-none opacity-50"
+                style={{ background: "radial-gradient(ellipse 70% 50% at 50% 80%, rgba(26,188,156,0.06), transparent)" }} />
 
-            <div className="w-full max-w-6xl relative z-10">
-                <div className="flex justify-between items-center mb-16">
-                    <Link
-                        href="/architecture"
-                        className="flex items-center text-zinc-400 hover:text-white transition-colors group"
-                    >
-                        <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
-                        Retour à l'Architecture
-                    </Link>
-                    <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-teal-400 tracking-tight">
-                        Traitement des Documents
-                    </h2>
-                    <div className="w-40"></div>
+            <div className="relative z-10 max-w-6xl mx-auto px-6 py-10">
+                <h1 className="text-2xl sm:text-3xl font-black font-display text-gradient-teal text-center mb-8">
+                    Ingestion & Vectorisation des Connaissances
+                </h1>
+
+                {/* Step cards — always rendered, opacity controlled by phase */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                    {STEPS.map((s, i) => {
+                        const active = phase === i + 1;
+                        const done = phase > i + 1;
+                        const locked = phase < i + 1;
+                        return (
+                            <div key={s.num} className="glass-card rounded-2xl p-6 flex flex-col items-center text-center gap-4 transition-all duration-400"
+                                style={{
+                                    borderColor: !locked ? `${s.color}30` : "rgba(63,63,70,0.25)",
+                                    opacity: locked ? 0.25 : 1,
+                                    boxShadow: active ? `0 0 28px ${s.color}18` : "none",
+                                }}>
+                                <div className="w-14 h-14 rounded-2xl flex items-center justify-center"
+                                    style={{ background: !locked ? `${s.color}14` : "rgba(39,39,42,0.5)", border: `1px solid ${!locked ? s.color + "28" : "rgba(63,63,70,0.25)"}` }}>
+                                    <s.icon className="w-7 h-7" style={{ color: !locked ? s.color : "#52525b" }} strokeWidth={1.5} />
+                                </div>
+                                <div>
+                                    <div className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: !locked ? s.color : "#52525b" }}>Étape {s.num}</div>
+                                    <h3 className="text-base font-bold text-white mb-1">{s.label}</h3>
+                                    <p className="text-xs text-zinc-500">{s.desc}</p>
+                                </div>
+                                {done && <CheckCircle className="w-5 h-5 text-teal-400" />}
+                            </div>
+                        );
+                    })}
                 </div>
 
-                <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="show"
-                    className="grid grid-cols-1 md:grid-cols-4 gap-6 items-center"
-                >
-
-                    {/* Step 1: Upload */}
-                    <motion.div variants={itemVariants} className="flex flex-col items-center text-center group">
-                        <div className="w-24 h-24 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center mb-6 group-hover:border-emerald-500/50 group-hover:bg-emerald-900/20 transition-all duration-300 relative shadow-xl">
-                            <FolderSync className="w-10 h-10 text-emerald-400" />
-                            <div className="absolute -top-3 -right-3 w-8 h-8 bg-zinc-800 rounded-full flex items-center justify-center border-2 border-black">
-                                <FileText className="w-4 h-4 text-zinc-400" />
+                {/* Phase 2 — chunks */}
+                <AnimatePresence>
+                    {phase >= 2 && (
+                        <motion.div key="chunks" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.45 }} className="mb-8">
+                            <p className="text-center text-xs text-zinc-600 uppercase tracking-widest mb-4">Segments extraits</p>
+                            <div className="flex flex-wrap justify-center gap-2">
+                                {CHUNKS.map((chunk, i) => (
+                                    <motion.div key={chunk} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.07, type: "spring", stiffness: 300 }}
+                                        className="px-3 py-1.5 rounded-lg text-xs font-mono"
+                                        style={{ background: "rgba(26,188,156,0.08)", border: "1px solid rgba(26,188,156,0.22)", color: "#5eead4" }}>
+                                        {chunk}
+                                    </motion.div>
+                                ))}
                             </div>
-                        </div>
-                        <h3 className="text-lg font-bold mb-2">1. Importation Massive</h3>
-                        <p className="text-sm text-zinc-400">
-                            Uploads de PDFs ou sélection de dossiers complets. Le service Watchdog détecte les fichiers automatiquement.
-                        </p>
-                    </motion.div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
 
-                    <div className="hidden md:flex justify-center text-zinc-700">
-                        <ArrowRight className="w-8 h-8 animate-pulse text-emerald-600/50" />
-                    </div>
-
-                    {/* Step 2: Chunking */}
-                    <motion.div variants={itemVariants} className="flex flex-col items-center text-center group">
-                        <div className="w-24 h-24 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center mb-6 group-hover:border-teal-500/50 group-hover:bg-teal-900/20 transition-all duration-300 shadow-xl">
-                            <Scissors className="w-10 h-10 text-teal-400" />
-                        </div>
-                        <h3 className="text-lg font-bold mb-2">2. Découpage Intelligent</h3>
-                        <p className="text-sm text-zinc-400">
-                            Découpage en segments (chunks) avec gestion du chevauchement (overlap) paramétrable via la console.
-                        </p>
-                    </motion.div>
-
-                    <div className="hidden md:flex justify-center text-zinc-700">
-                        <ArrowRight className="w-8 h-8 animate-pulse text-teal-600/50" />
-                    </div>
-
-                    {/* Step 3: Embeddings & DB */}
-                    <motion.div variants={itemVariants} className="flex flex-col items-center text-center group">
-                        <div className="w-24 h-24 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center mb-6 group-hover:border-indigo-500/50 group-hover:bg-indigo-900/20 transition-all duration-300 shadow-xl">
-                            <Database className="w-10 h-10 text-indigo-400" />
-                        </div>
-                        <h3 className="text-lg font-bold mb-2">3. Vectorisation pgvector</h3>
-                        <p className="text-sm text-zinc-400">
-                            Génération d'embeddings sémantiques stockés nativement dans PostgreSQL pour la recherche par similarité.
-                        </p>
-                    </motion.div>
-
-                </motion.div>
-
-                {/* Feature Highlights */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1.2, duration: 0.8 }}
-                    className="mt-20 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto"
-                >
-                    <div className="p-6 rounded-xl border border-zinc-800/50 bg-zinc-900/30">
-                        <h4 className="font-bold text-emerald-400 mb-2 flex items-center gap-2">
-                            <RefreshCcw className="w-4 h-4" /> Surveillance de Fichiers en Temps Réel
-                        </h4>
-                        <p className="text-sm text-zinc-400">
-                            Déposez n'importe quel fichier de configuration ou markdown dans le répertoire <code>docs/</code> et le backend réindexe automatiquement la base de connaissances en temps réel.
-                        </p>
-                    </div>
-                    <div className="p-6 rounded-xl border border-zinc-800/50 bg-zinc-900/30">
-                        <h4 className="font-bold text-teal-400 mb-2 flex items-center gap-2">
-                            <Search className="w-4 h-4" /> Hybrid Retrieval
-                        </h4>
-                        <p className="text-sm text-zinc-400">
-                            Le moteur de recherche combine un filtrage symbolique stricte (basé sur les règles) avec la recherche vectorielle pour extraire le contexte exact.
-                        </p>
-                    </div>
-                </motion.div>
-
+                {/* Phase 3 — vector network (static SVG, no animated circles) */}
+                <AnimatePresence>
+                    {phase >= 3 && (
+                        <motion.div key="net" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}
+                            className="glass-card rounded-2xl p-4 relative overflow-hidden" style={{ height: 220 }}>
+                            <p className="text-xs text-zinc-600 uppercase tracking-widest text-center mb-1">Réseau de connaissances vectoriel</p>
+                            <svg className="absolute inset-0 w-full h-full opacity-80" viewBox="0 0 100 100" preserveAspectRatio="none">
+                                {NODES.map((n, i) =>
+                                    NODES.slice(i + 1, i + 3).map((m, j) => (
+                                        <line key={`${i}-${j}`} x1={n.x} y1={n.y} x2={m.x} y2={m.y}
+                                            stroke={ACTIVE.has(i) ? "rgba(241,196,15,0.35)" : "rgba(26,188,156,0.14)"}
+                                            strokeWidth="0.4" />
+                                    ))
+                                )}
+                                {NODES.map((n, i) => (
+                                    <circle key={i} cx={n.x} cy={n.y} r={ACTIVE.has(i) ? "1.4" : "0.9"}
+                                        fill={ACTIVE.has(i) ? "#f1c40f" : "#1abc9c"}
+                                        style={{ filter: ACTIVE.has(i) ? "drop-shadow(0 0 3px #f1c40f)" : "none" }} />
+                                ))}
+                            </svg>
+                            <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-4">
+                                {[{ label: "Filtres Symboliques", color: "#6366f1" }, { label: "Similarité Vectorielle", color: "#f1c40f" }].map(b => (
+                                    <span key={b.label} className="px-3 py-1 rounded-full text-xs font-semibold"
+                                        style={{ background: `${b.color}12`, border: `1px solid ${b.color}28`, color: b.color }}>
+                                        {b.label}
+                                    </span>
+                                ))}
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
+
+            <NavBar phase={phase} max={MAX_PHASE} onNext={handleNext} onPrev={handlePrev} />
         </div>
     );
 }

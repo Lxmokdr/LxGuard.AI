@@ -1,18 +1,15 @@
+import type { Metadata } from "next";
 import "./globals.css";
 
-export const metadata = {
-    title: "LxGuard.AI System Presentation",
-    description: "Complete System Overview",
+export const metadata: Metadata = {
+    title: "Hybrid NLP-Expert Agent",
+    description: "Secure • Explainable • Enterprise AI — Animated System Explainer",
 };
 
-export default function RootLayout({
-    children,
-}: {
-    children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <html lang="en">
-            <body className="min-h-screen bg-black text-white antialiased">
+        <html lang="en" className="dark">
+            <body className="min-h-screen bg-[#0a0b1a] text-white antialiased" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
                 {children}
             </body>
         </html>
