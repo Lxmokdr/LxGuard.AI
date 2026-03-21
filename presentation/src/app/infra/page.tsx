@@ -59,9 +59,22 @@ export default function Scene8Infra() {
                 style={{ background: "radial-gradient(ellipse 80% 80% at 50% 50%, rgba(99,102,241,0.06), transparent 70%)" }} />
 
             <div className="relative z-10 max-w-6xl mx-auto px-6 py-10">
-                <h1 className="text-2xl sm:text-3xl font-black font-display text-gradient-indigo text-center mb-8">
-                    Infrastructure & Déploiement
-                </h1>
+                <div className="flex flex-col items-center gap-6 text-center mb-8">
+                    <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.5 }}>
+                        <h1 className="text-5xl sm:text-7xl font-black font-display text-gradient-indigo mb-2">LxGuard.AI</h1>
+                        <motion.div animate={{ opacity: [0.4, 1, 0.4], scale: [1, 1.02, 1] }} transition={{ repeat: Infinity, duration: 3 }}
+                            className="text-lg sm:text-2xl font-light text-teal-400 tracking-[0.3em] uppercase drop-shadow-[0_0_12px_rgba(20,184,166,0.4)]">Souveraineté Totale</motion.div>
+                    </motion.div>
+
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}
+                        className="flex flex-wrap items-center justify-center gap-6 mt-4">
+                        {["v2.1", "FastAPI + pgvector", "Docker-Native", "Ollama v0.1.28"].map((tech, i) => (
+                            <span key={tech} className="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-mono text-zinc-500">
+                                {tech}
+                            </span>
+                        ))}
+                    </motion.div>
+                </div>
 
                 {/* Diagram */}
                 <div className="glass-card rounded-2xl relative overflow-hidden mb-8" style={{ height: 420 }}>
@@ -127,11 +140,25 @@ export default function Scene8Infra() {
                 {/* Final conclusion — phase 4 */}
                 <AnimatePresence>
                     {phase >= 4 && (
-                        <motion.div key="end" initial={{ opacity: 0, y: 24, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }}
+                        <motion.div key="end" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.9, ease: "easeOut" }} className="text-center space-y-4">
-                            <h2 className="text-4xl sm:text-6xl font-black font-display text-gradient-hero">
-                                Hybrid NLP-Expert Agent
-                            </h2>
+                            <div className="flex justify-center overflow-hidden h-20 items-center">
+                                {"LxGuard.AI".split("").map((char, i) => (
+                                    <motion.span
+                                        key={i}
+                                        initial={{ y: 60, opacity: 0, filter: "blur(8px)" }}
+                                        animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+                                        transition={{
+                                            duration: 0.8,
+                                            delay: 0.3 + i * 0.05,
+                                            ease: [0.215, 0.61, 0.355, 1],
+                                        }}
+                                        className="text-4xl sm:text-7xl font-black font-display text-gradient-hero leading-none inline-block drop-shadow-[0_0_20px_rgba(99,102,241,0.4)] animate-glint"
+                                    >
+                                        {char === " " ? "\u00A0" : char}
+                                    </motion.span>
+                                ))}
+                            </div>
                             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4, duration: 0.8 }}
                                 className="flex items-center justify-center gap-4 text-lg font-semibold">
                                 <span className="text-gradient-indigo">Sécurisé</span>

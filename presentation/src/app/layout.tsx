@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-    title: "Hybrid NLP-Expert Agent",
+    title: "LxGuard.AI — Multi-Layer AI Governance",
     description: "Secure • Explainable • Enterprise AI — Animated System Explainer",
 };
 

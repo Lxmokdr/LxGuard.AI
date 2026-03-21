@@ -266,6 +266,24 @@ body {
     }
 }
 
+@keyframes glint {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.animate-glint {
+    background: linear-gradient(110deg, transparent 33%, rgba(255, 255, 255, 0.3) 45%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.3) 55%, transparent 67%);
+    background-size: 200% 100%;
+    animation: glint 4s linear infinite;
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
 /* === Utility Classes === */
 
 .font-display {

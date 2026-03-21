@@ -17,6 +17,9 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "LxGuard.AI Admin",
   description: "Admin & Governance Dashboard for LxGuard.AI System",
+  icons: {
+    icon: "/ShieldLx-04.png",
+  },
 };
 
 export default function RootLayout({

@@ -6,12 +6,9 @@ import { Globe, Key, Building2, Activity, ChevronLeft, ChevronRight } from "luci
 import { useSlideNav } from "../useSlideNav";
 
 const COMPANIES = [
-    { id: "co1", name: "AXA France", x: 25, y: 30, active: true },
-    { id: "co2", name: "BNP Paribas", x: 65, y: 20, active: true },
-    { id: "co3", name: "Orange Business", x: 80, y: 55, active: true },
-    { id: "co4", name: "Société Générale", x: 45, y: 70, active: false },
-    { id: "co5", name: "SNCF", x: 15, y: 65, active: true },
-    { id: "co6", name: "EDF", x: 52, y: 38, active: true },
+    { id: "axa", name: "AXA France", x: 25, y: 35, status: "active", icon: Building2 },
+    { id: "bnp", name: "BNP Paribas", x: 45, y: 55, status: "active", icon: Building2 },
+    { id: "orange", name: "Orange Business", x: 65, y: 40, status: "active", icon: Building2 },
 ];
 const LICENSES = [
     { key: "LXG-A1B2-C3D4-PROD", company: "AXA France", status: "active", color: "#1abc9c" },
@@ -78,14 +75,14 @@ export default function Scene7Vendor() {
                                         <line x1="90" y1="90"
                                             x2={90 + (50 - co.x) * 1.8}
                                             y2={90 + (45 - co.y) * 1.8}
-                                            stroke={co.active ? "rgba(26,188,156,0.25)" : "rgba(239,68,68,0.18)"}
+                                            stroke={co.status === "active" ? "rgba(26,188,156,0.25)" : "rgba(239,68,68,0.18)"}
                                             strokeWidth="1" strokeDasharray="4 4" />
                                     </svg>
                                     <div className="relative w-12 h-12 rounded-xl flex items-center justify-center group cursor-pointer hover:scale-110 transition-transform"
-                                        style={{ background: co.active ? "rgba(26,188,156,0.12)" : "rgba(239,68,68,0.1)", border: `1px solid ${co.active ? "rgba(26,188,156,0.35)" : "rgba(239,68,68,0.3)"}`, boxShadow: co.active ? "0 0 14px rgba(26,188,156,0.2)" : "none" }}>
-                                        <Building2 className="w-5 h-5" style={{ color: co.active ? "#1abc9c" : "#ef4444" }} />
+                                        style={{ background: co.status === "active" ? "rgba(26,188,156,0.12)" : "rgba(239,68,68,0.1)", border: `1px solid ${co.status === "active" ? "rgba(26,188,156,0.35)" : "rgba(239,68,68,0.3)"}`, boxShadow: co.status === "active" ? "0 0 14px rgba(26,188,156,0.2)" : "none" }}>
+                                        <Building2 className="w-5 h-5" style={{ color: co.status === "active" ? "#1abc9c" : "#ef4444" }} />
                                         <div className="absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap text-[10px] font-semibold px-2 py-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                                            style={{ background: "rgba(0,0,0,0.85)", color: co.active ? "#1abc9c" : "#ef4444" }}>
+                                            style={{ background: "rgba(0,0,0,0.85)", color: co.status === "active" ? "#1abc9c" : "#ef4444" }}>
                                             {co.name}
                                         </div>
                                     </div>

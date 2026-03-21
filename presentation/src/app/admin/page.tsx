@@ -47,9 +47,15 @@ export default function Scene6Admin() {
                 style={{ background: "radial-gradient(ellipse 60% 40% at 80% 30%, rgba(99,102,241,0.07), transparent)" }} />
 
             <div className="relative z-10 max-w-6xl mx-auto px-6 py-10">
-                <h1 className="text-2xl sm:text-3xl font-black font-display text-gradient-indigo text-center mb-8">
-                    Enterprise Admin Console
-                </h1>
+                <div className="flex flex-col items-center gap-2 mb-8">
+                    <h1 className="text-2xl sm:text-3xl font-black font-display text-gradient-indigo text-center">
+                        Console d'Administration Entreprise
+                    </h1>
+                    <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.5 }}
+                        className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-[10px] font-black text-emerald-400 uppercase tracking-widest">
+                        Données 100% Souveraines
+                    </motion.div>
+                </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {/* Phase 1 — Metrics */}

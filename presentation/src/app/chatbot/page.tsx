@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Bot, User, FileText, Tag, Shield, Zap, ChevronLeft, ChevronRight } from "lucide-react";
+import { Bot, User, FileText, Tag, Shield, Zap, Activity, CheckCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import { useSlideNav } from "../useSlideNav";
 
 const MODES = ["Base de Connaissance", "Données Liées", "IA Pure"];
@@ -44,9 +44,23 @@ export default function Scene5Chatbot() {
                 style={{ background: "radial-gradient(ellipse 60% 50% at 30% 50%, rgba(99,102,241,0.06), transparent)" }} />
 
             <div className="relative z-10 max-w-6xl mx-auto px-6 py-10">
-                <h1 className="text-2xl sm:text-3xl font-black font-display text-gradient-indigo text-center mb-8">
-                    LxGuard.AI — Interface Chatbot
-                </h1>
+                <div className="flex justify-center overflow-hidden mb-8 h-10 items-center">
+                    {"LxGuard.AI — Interface Chatbot".split("").map((char, i) => (
+                        <motion.span
+                            key={i}
+                            initial={{ y: 30, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            transition={{
+                                duration: 0.6,
+                                delay: 0.1 + i * 0.03,
+                                ease: "easeOut",
+                            }}
+                            className="text-2xl sm:text-3xl font-black font-display text-gradient-indigo inline-block origin-bottom px-[1px]"
+                        >
+                            {char === " " ? "\u00A0" : char}
+                        </motion.span>
+                    ))}
+                </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
                     {/* Chat panel */}
@@ -97,6 +111,51 @@ export default function Scene5Chatbot() {
                                         </div>
                                     </motion.div>
                                 )}
+                                {/* NeuroConsole Details */}
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2 text-[10px] font-bold text-indigo-400 uppercase tracking-widest">
+                                            <Activity className="w-3 h-3" /> Indice de Confiance
+                                        </div>
+                                        <div className="text-xs font-black text-white">98.2%</div>
+                                    </div>
+                                    <div className="h-1.5 w-full bg-zinc-800 rounded-full overflow-hidden">
+                                        <motion.div initial={{ width: 0 }} animate={{ width: "98.2%" }} transition={{ duration: 1, delay: 0.5 }} className="h-full bg-gradient-to-r from-indigo-500 to-teal-400" />
+                                    </div>
+
+                                    <div className="space-y-3">
+                                        <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-2">
+                                            <Zap className="w-3 h-3 text-yellow-400" /> Entités & Intentions
+                                        </div>
+                                        <div className="flex flex-wrap gap-2">
+                                            {["Catégorie : Cadre", "Sujet : Congés", "Intention : Informative"].map(tag => (
+                                                <span key={tag} className="px-2 py-1 rounded-md bg-white/5 border border-white/10 text-[10px] text-indigo-200">
+                                                    {tag}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-3">
+                                        <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-2">
+                                            <FileText className="w-3 h-3 text-teal-400" /> Sources PDF
+                                        </div>
+                                        <div className="space-y-2">
+                                            <motion.div animate={{ borderColor: ["rgba(26,188,156,0.2)", "rgba(26,188,156,0.6)", "rgba(26,188,156,0.2)"] }}
+                                                transition={{ repeat: Infinity, duration: 2 }}
+                                                className="p-2 rounded-xl bg-teal-400/5 border border-teal-400/20 flex items-center gap-3">
+                                                <div className="w-8 h-8 rounded-lg bg-teal-400/10 flex items-center justify-center">
+                                                    <FileText className="w-4 h-4 text-teal-400" />
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="text-[10px] font-bold text-white truncate">guide_rh_2024.pdf</div>
+                                                    <div className="text-[9px] text-zinc-500">Page 12 · Section 3.2</div>
+                                                </div>
+                                                <CheckCircle className="w-3 h-3 text-teal-400" />
+                                            </motion.div>
+                                        </div>
+                                    </div>
+                                </div>
                             </AnimatePresence>
                         </div>
 

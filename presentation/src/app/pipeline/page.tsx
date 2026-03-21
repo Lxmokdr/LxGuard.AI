@@ -6,14 +6,14 @@ import { ShieldCheck, Network, Brain, Scale, Search, ListTree, Cpu, RefreshCcw, 
 import { useSlideNav } from "../useSlideNav";
 
 const LAYERS = [
-    { num: 0, name: "Contrôle de Sécurité", icon: ShieldCheck, color: "#6366f1", desc: "RBAC & validation des requêtes" },
-    { num: 1, name: "Cœur NLP Avancé", icon: Network, color: "#818cf8", desc: "Analyse sémantique & entités nommées" },
-    { num: 2, name: "Cerveau Expert Symbolique", icon: Brain, color: "#1abc9c", desc: "Règles métier déterministes & ontologie" },
-    { num: 3, name: "Arbitrage d'Intention", icon: Scale, color: "#f59e0b", desc: "Résout conflits & bloque hors-sujet" },
-    { num: 4, name: "Recherche Hybride", icon: Search, color: "#818cf8", desc: "Symbolique + vecteur (pgvector)" },
-    { num: 5, name: "Planification Récursive", icon: ListTree, color: "#6366f1", desc: "Formatage & validation des contrats" },
-    { num: 6, name: "Génération LLM Contrôlée", icon: Cpu, color: "#a78bfa", desc: "Inférence locale basée sur les faits" },
-    { num: 7, name: "Auto-Validation & Audit", icon: RefreshCcw, color: "#34d399", desc: "Anti-hallucination & journal SIEM" },
+    { num: 0, name: "Contrôle Sécurité", icon: ShieldCheck, color: "#f43f5e", desc: "L0 - Filtrage entrées & RBAC", slow: false },
+    { num: 1, name: "Analyse NLP", icon: Network, color: "#6366f1", desc: "L1 - Extraction entités & sens", slow: false },
+    { num: 2, name: "Cerveau Expert", icon: Brain, color: "#8b5cf6", desc: "L2 - Logique métier déterministe", slow: false },
+    { num: 3, name: "Garde-fou d'Intention", icon: Scale, color: "#ec4899", desc: "L3 - Bloque les hors-sujets (CRITIQUE)", slow: true },
+    { num: 4, name: "Recherche Hybride", icon: Search, color: "#1abc9c", desc: "L4 - Vecteurs + Symboles", slow: false },
+    { num: 5, name: "Planification", icon: ListTree, color: "#f59e0b", desc: "L5 - Orchestration & Stratégie", slow: false },
+    { num: 6, name: "Génération", icon: Cpu, color: "#a78bfa", desc: "L6 - LLM Local (Souverain)", slow: false },
+    { num: 7, name: "Auto-Validation", icon: RefreshCcw, color: "#10b981", desc: "L7 - Zero Hallucination (GARANTIE)", slow: true },
 ];
 
 // 0=query bubble, 1-8=layers, 9=response
@@ -105,6 +105,10 @@ export default function Scene3Pipeline() {
                                                 <div className="flex items-center gap-2">
                                                     <span className="text-xs font-bold px-1.5 py-0.5 rounded" style={{ background: `${layer.color}18`, color: layer.color }}>L{layer.num}</span>
                                                     <span className={`text-sm font-semibold ${isActive ? "text-white" : isPast ? "text-zinc-300" : "text-zinc-600"}`}>{layer.name}</span>
+                                                    {layer.slow && isActive && (
+                                                        <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ repeat: Infinity, duration: 1 }}
+                                                            className="text-[10px] text-zinc-400 font-bold uppercase tracking-tighter">Vérification...</motion.span>
+                                                    )}
                                                 </div>
                                                 <p className="text-xs text-zinc-600 mt-0.5">{layer.desc}</p>
                                             </div>

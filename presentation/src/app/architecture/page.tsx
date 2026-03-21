@@ -51,12 +51,41 @@ export default function Scene2Solution() {
             <div className="relative z-10 w-full max-w-6xl mx-auto px-6 flex flex-col items-center gap-10">
                 {/* Title */}
                 <motion.div initial={{ opacity: 0, y: -24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9 }} className="text-center space-y-3">
-                    <motion.h1 initial={{ scale: 0.88, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-                        transition={{ duration: 1, delay: 0.15, ease: "easeOut" }}
-                        className="text-4xl sm:text-6xl font-black font-display text-gradient-hero leading-none">
-                        LxGuard.AI
-                    </motion.h1>
-                    <p className="text-lg text-zinc-400 font-light">Architecture hybride neuro-symbolique sécurisée</p>
+                    <div className="flex flex-col items-center justify-center gap-6 overflow-hidden">
+                        <div className="flex justify-center">
+                            {"LxGuard.AI".split("").map((char, i) => (
+                                <motion.span
+                                    key={i}
+                                    initial={{ y: 80, opacity: 0, filter: "blur(10px)" }}
+                                    animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+                                    transition={{
+                                        duration: 0.8,
+                                        delay: 0.1 + i * 0.05,
+                                        ease: [0.215, 0.61, 0.355, 1],
+                                        type: "spring", stiffness: 100, damping: 15
+                                    }}
+                                    className="text-5xl sm:text-7xl font-black font-display text-gradient-hero leading-none inline-block origin-bottom animate-glint drop-shadow-[0_0_20px_rgba(99,102,241,0.3)]"
+                                >
+                                    {char === " " ? "\u00A0" : char}
+                                </motion.span>
+                            ))}
+                        </div>
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="flex gap-4">
+                            {["Interface UX", "Gouvernance IA", "Contrôle Fournisseur"].map(l => (
+                                <span key={l} className="px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-[10px] font-black uppercase tracking-widest text-indigo-300">
+                                    {l}
+                                </span>
+                            ))}
+                        </motion.div>
+                    </div>
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.8, duration: 1 }}
+                        className="text-lg text-zinc-400 font-light"
+                    >
+                        Architecture hybride neuro-symbolique sécurisée
+                    </motion.p>
                 </motion.div>
 
                 {/* Nodes */}
