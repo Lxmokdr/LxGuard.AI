@@ -122,16 +122,16 @@ const ChatInterface = ({
               Welcome to LxGuard.AI
             </h3>
             <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
-              Describe your Next.js issue below. Watch the Neuro-Console on the right
-              to see exactly how the AI agent thinks, which rules it applies, and what
-              documentation it references.
+              Ask any question about your enterprise knowledge base. Watch the
+              Neuro-Console on the right to see how the hybrid AI agent reasons,
+              which expert rules it applies, and which documents it references.
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-2">
               {[
-                "Routing issues",
-                "API routes",
-                "Build errors",
-                "SSR problems",
+                "Policy compliance",
+                "Security incidents",
+                "Access control",
+                "Document search",
               ].map((tag) => (
                 <span
                   key={tag}
