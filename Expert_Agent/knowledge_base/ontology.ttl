@@ -2,6 +2,16 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
+ex:AI a owl:Class ;
+    rdfs:label "AI" ;
+    ex:act ex:supervisor ;
+    ex:derivedFrom """**Control**: The LxGuard.AI (Symbolic) acts as a supervisor, pruning LLM outputs and enforcing rigid constraints.
+""",
+        """AI filters documents by eligibility rules.
+    - **Tier 2**: Top documents are ranked by vector similarity (pgvector).
+    -""" ;
+    ex:rank ex:documents .
+
 ex:Admin a owl:Class ;
     rdfs:label "Admin" ;
     ex:click ex: ;
@@ -41,7 +51,15 @@ ex:Automatic_Subject_Verb_extraction a owl:Class ;
 
 ex:Branch_Review_Compliance_Review_Level a owl:Class ;
     rdfs:label "Branch Review Compliance Review Level" ;
-    ex:require ex:An_escalation_level_for_compliance_review_based_on_branch_activity .
+    ex:derivedFrom """
+Level 1 → Branch Review  
+ Level 2 → Compliance Review  
+ Level 3 → Financial Crime Unit
+
+Level 3 requires Suspicious Transaction Report (STR) submission within 48 hours.
+
+""" ;
+    ex:require ex:Compliance_Review_Level .
 
 ex:Chunks a owl:Class ;
     rdfs:label "Chunks" ;
@@ -51,19 +69,25 @@ ex:Chunks a owl:Class ;
 
 ex:Collateral_Requirements a owl:Class ;
     rdfs:label "Collateral Requirements" ;
-    ex:requires ex:Specific_collateral_requirements_for_each_loan_category .
+    ex:requires ex:Collateral_requirements_for_each_loan_category_are_defined_by .
 
 ex:Corporate_Risk_Assessment a owl:Class ;
     rdfs:label "Corporate Risk Assessment" ;
-    rdfs:subClassOf ex:The_document_covers_the_following_aspects_of_corporate_risk_assessment .
+    rdfs:subClassOf ex:The_corporate_risk_assessment_covers_aspects_such_as .
 
 ex:Credit_Scoring_Model_Retail a owl:Class ;
     rdfs:label "Credit Scoring Model (Retail)" ;
-    rdfs:subClassOf ex:Score_components_and_minimum_approval_score .
+    ex:requires ex:The_credit_scoring_model_for_retail_loans_includes .
 
 ex:Customer a owl:Class ;
     rdfs:label "Customer" ;
-    ex:avoid ex:An_indicator_of_suspicious_activity_related_to_customer_behavior .
+    ex:avoid ex:funds ;
+    ex:derivedFrom """
+* Customer avoids answering source-of-funds questions
+
+* Frequent changes in account signatories
+
+*""" .
 
 ex:Daily a owl:Class ;
     rdfs:label "Daily" ;
@@ -73,9 +97,17 @@ ex:Daily a owl:Class ;
 """ ;
     ex:log ex:high_forensic_analysis .
 
-ex:Docker a owl:Class ;
-    rdfs:label "Docker" ;
-    ex:install ex:license_key .
+ex:Docker_Docker a owl:Class ;
+    rdfs:label "Docker Docker" ;
+    ex:derivedFrom """
+- Docker & Docker Compose installed
+- A license key issued by your vendor (see [Vendor Platform Guide](vendor_platform.md))
+- Outbound HTTPS access to the vendor license server
+
+---
+
+""" ;
+    ex:instal ex:license_key .
 
 ex:Dynamic_Loading a owl:Class ;
     rdfs:label "Dynamic Loading" ;
@@ -84,9 +116,20 @@ ex:Dynamic_Loading a owl:Class ;
 """ ;
     ex:store ex:PostgreSQL .
 
-ex:Enterprise a owl:Class ;
-    rdfs:label "Enterprise" ;
-    ex:contact ex:server .
+ex:Enterprise_instance a owl:Class ;
+    rdfs:label "Enterprise instance" ;
+    ex:contact ex:server ;
+    ex:derivedFrom """Enterprise instance contacts the server at next `LICENSE_CHECK_INTERVAL`
+2.""" .
+
+ex:Enterprise_instances a owl:Class ;
+    rdfs:label "Enterprise instances" ;
+    ex:communicate ex:check ;
+    ex:derivedFrom """- Enterprise instances communicate only with `POST /api/license/check` and `POST /api/heartbeat` (no auth required, rate-limited by your reverse proxy).
+
+""",
+        "Enterprise instances verify this signature before trusting the response." ;
+    ex:verify ex:signature .
 
 ex:ExpertAgent_manage_triple a owl:Class ;
     rdfs:label "ExpertAgent.manage_triple" ;
@@ -95,18 +138,15 @@ ex:ExpertAgent_manage_triple a owl:Class ;
 """ ;
     ex:execute ex:final_update .
 
-ex:Expert_Agent a owl:Class ;
-    rdfs:label "Expert Agent" ;
-    ex:act ex: ;
-    ex:derivedFrom """**Control**: The Expert Agent (Symbolic) acts as a supervisor, pruning LLM outputs and enforcing rigid constraints.
-""",
-        """**Expert Check**:
-    - Expert Agent verifies that for the intent `ContractAnalysis`, the user (Guest) has permission.
-    -""" ;
-    ex:verify ex:intent .
-
 ex:Expert_Agent_env a owl:Class ;
     rdfs:label "Expert_Agent/.env" ;
+    ex:derivedFrom """
+Edit `Expert_Agent/.env` (or set the variables in your Docker host / secrets manager):
+
+```env
+LICENSE_KEY=<your-license-key-from-vendor>
+LICENSE_SERVER_URL=https://licenses.yourvendor.com
+""" ;
     ex:set ex:variables .
 
 ex:Expert_Arbitration a owl:Class ;
@@ -124,7 +164,27 @@ ex:ExplanationGenerator a owl:Class ;
 
 ex:Fraud_detection_Money_laundering_prevention_Suspicious_transaction a owl:Class ;
     rdfs:label "Fraud detection Money laundering prevention Suspicious transaction" ;
-    ex:define ex:An_automated_rule_triggered_by_suspicious_transaction_detection .
+    ex:define ex:escalation_Fraud_detection_Money_laundering_prevention_Suspicious_Internal_monitoring ;
+    ex:derivedFrom """To define monitoring, reporting, and escalation procedures for:
+
+* Fraud detection
+
+* Money laundering prevention
+
+* Suspicious transaction reporting
+
+* Internal misconduct
+
+---
+
+""" .
+
+ex:Gather_transaction a owl:Class ;
+    rdfs:label "Gather transaction" ;
+    ex:derivedFrom """Gather transaction logs
+
+2.""" ;
+    ex:log ex:2 .
 
 ex:General_local_questions a owl:Class ;
     rdfs:label "General local questions" ;
@@ -135,6 +195,7 @@ ex:General_local_questions a owl:Class ;
 
 ex:ID a owl:Class ;
     rdfs:label "ID" ;
+    ex:derivedFrom "This ID is sent with every license check and heartbeat." ;
     ex:send ex:license_check .
 
 ex:Induced_triples a owl:Class ;
@@ -167,7 +228,15 @@ ex:KG a owl:Class ;
 
 ex:LICENSE_KEY a owl:Class ;
     rdfs:label "LICENSE_KEY" ;
-    ex:bypass ex:skip_validation .
+    ex:bypass ex:checks ;
+    ex:derivedFrom """LICENSE_CHECK_INTERVAL=300       # seconds between checks (default 5 min)
+LICENSE_FAIL_GRACE_PERIOD=86400  # seconds to operate without server contact (default 24h)
+HEARTBEAT_INTERVAL=300           # seconds between metric reports
+```
+
+> **Note**: If `LICENSE_KEY` is not set, the system runs in **development mode** — all license checks are bypassed.
+
+""" .
 
 ex:LLM a owl:Class ;
     rdfs:label "LLM" ;
@@ -178,8 +247,8 @@ ex:LLM a owl:Class ;
 """ ;
     ex:generate ex:cited_response .
 
-ex:LOD a owl:Class ;
-    rdfs:label "LOD" ;
+ex:LOD_Cloud a owl:Class ;
+    rdfs:label "LOD Cloud" ;
     ex:trigger ex:Streaming_Chat_API .
 
 ex:List a owl:Class ;
@@ -190,7 +259,18 @@ ex:List a owl:Class ;
 
 ex:Loan_Categories a owl:Class ;
     rdfs:label "Loan Categories" ;
-    ex:isPartOf ex:The_document_covers_the_following_loan_categories .
+    ex:isPartOf ex:The_document_covers_loan_categories_for .
+
+ex:Local_cache a owl:Class ;
+    rdfs:label "Local cache" ;
+    ex:derivedFrom """Local cache is updated
+4.""" ;
+    ex:update ex:4 .
+
+ex:LxGuard a owl:Class ;
+    rdfs:label "LxGuard" ;
+    ex:be ex:Hybrid_Neuro_Symbolic_Conversational_enterprise_knowledge_regulated_Architecture ;
+    ex:derivedFrom "The **LxGuard.AI** is a Hybrid Neuro-Symbolic Conversational Architecture designed for enterprise knowledge retrieval in regulated environments." .
 
 ex:Manages_concepts a owl:Class ;
     rdfs:label "Manages concepts" ;
@@ -245,9 +325,14 @@ ex:Reception a owl:Class ;
 """ ;
     ex:receive ex:JSON .
 
-ex:Suspicious_transaction a owl:Class ;
-    rdfs:label "Suspicious transaction" ;
-    ex:require ex:An_automated_rule_triggered_by_specific_transaction_characteristics .
+ex:Refusal a owl:Class ;
+    rdfs:label "Refusal" ;
+    ex:derivedFrom """Refusal to provide beneficial ownership info
+
+---
+
+""" ;
+    ex:provide ex:beneficial_ownership_info .
 
 ex:Symbolic_rules a owl:Class ;
     rdfs:label "Symbolic rules" ;
@@ -264,17 +349,18 @@ ex:System a owl:Class ;
 """ ;
     ex:select ex:documents .
 
-ex:Tier a owl:Class ;
-    rdfs:label "Tier" ;
-    ex:derivedFrom """**Tier 1**: Expert Agent filters documents by eligibility rules.
-    """ ;
-    ex:filter ex:documents .
+ex:This a owl:Class ;
+    rdfs:label "This" ;
+    ex:derivedFrom """This prevents vendor-side outages from impacting enterprise operations.
 
-ex:Top_documents a owl:Class ;
-    rdfs:label "Top documents" ;
-    ex:derivedFrom """- **Tier 2**: Top documents are ranked by vector similarity (pgvector).
-    -""" ;
-    ex:rank ex:vector_similarity .
+""" ;
+    ex:prevent ex:vendor_side_impacting_enterprise_outages .
+
+ex:VENDOR_HMAC_SECRET a owl:Class ;
+    rdfs:label "VENDOR_HMAC_SECRET" ;
+    ex:derivedFrom """
+- The `VENDOR_HMAC_SECRET` is used to sign license responses.""" ;
+    ex:use ex:license_responses .
 
 ex:Validation a owl:Class ;
     rdfs:label "Validation" ;
@@ -293,25 +379,53 @@ ex:api_hybrid_py rdfs:label "api_hybrid.py" ;
 """ ;
     ex:trigger ex:startup_event .
 
-ex:backend rdfs:label "backend" ;
-    ex:logs ex:running_state .
-
 ex:background_service rdfs:label "background service" ;
     ex:derivedFrom "*   **Knowledge Sync**: A background service (`services/knowledge_sync.py`) watches the `docs/` folder." ;
     ex:watch ex: .
 
+ex:bash_docker rdfs:label "bash docker" ;
+    ex:compose ex:immediate_license_verification ;
+    ex:derivedFrom """
+```bash
+docker compose up -d --build
+```
+
+The system will perform an immediate license verification on startup.""" .
+
+ex:bash_docker_compose_logs rdfs:label "bash docker compose logs" ;
+    ex:backend ex:logs ;
+    ex:derivedFrom """Check the logs:
+
+```bash
+docker compose logs backend --tail=30
+```
+
+You should see:
+```
+🆔 New instance ID generated: <uuid>
+🔑 License check completed — ✅ valid
+💓""" .
+
 ex:core_SPARQL_raw_SPARQL_specialized_entity_Handles_URI_React_interface rdfs:label "core SPARQL raw SPARQL specialized entity Handles URI React interface" ;
     ex:include ex:SPARQL_federation .
 
-ex:create rdfs:label "create" ;
-    ex:create ex:Admin_user_registration .
+ex:customer rdfs:label "customer" ;
+    ex:derivedFrom """
+If a customer has multiple deployments and you need to disable only one:
 
-ex:disable rdfs:label "disable" ;
-    ex:remotely ex:Disable_license_for_customer ;
-    ex:specific ex:Disable_license_for_specific_instance .
+**Via Dashboard:**
+- Go to **Instances** → click **Disable** on the specific instance
 
-ex:docker rdfs:label "docker" ;
-    ex:compose ex:immediate_license_verification .
+**Via API:**
+```bash
+curl -X POST http://localhost:8002/admin/instances/<instance-id>/disable \\
+  -H "Authorization: Bearer <token>"
+```
+
+This revokes the associated license key, affecting the specific instance.
+
+""" ;
+    ex:revoke ex:multiple_deployments .
 
 ex:document rdfs:label "document" ;
     ex:describe ex:Linked_Open_Hybrid_NLP_Expert_Agent_implementation .
@@ -322,16 +436,39 @@ ex:embedding_column rdfs:label "embedding column" ;
 """ ;
     ex:enable ex:document_chunks .
 
+ex:enterprise_Separate_PostgreSQL_Redis_Separate_Ollama_Separate_document_store_enterprise_vendor_timestamp_Aggregated_installation rdfs:label "enterprise Separate PostgreSQL Redis Separate Ollama Separate document store enterprise vendor timestamp Aggregated installation" ;
+    ex:be ex:vendor_server ;
+    ex:derivedFrom """
+Each enterprise installation is fully independent:
+- Separate PostgreSQL database (`hybrid_db`)
+- Separate Redis cache
+- Separate Ollama LLM instance
+- Separate document store
+
+No enterprise data is ever sent to the vendor server — only:
+- `instance_id`, `license_key`, `hostname`, `version`, `timestamp`
+- Aggregated counters: `query_count`, `error_count`, `uptime`
+
+---
+
+""" .
+
 ex:following_metrics rdfs:label "following metrics" ;
     ex:derivedFrom """
-The following metrics represent the verified performance of the Hybrid NLP-Expert Agent based on the standardized **Research Baseline Evaluation** (5,000-query corpus). 
-
-""" ;
-    ex:represent ex:verified_Hybrid_NLP_Expert_performance .
+The following metrics represent the verified performance of LxGuard.""" ;
+    ex:represent ex:verified_performance .
 
 ex:guide rdfs:label "guide" ;
     ex:cover ex:AI_Expert_Agent_platform ;
-    ex:explain ex:Vendor_Platform_Guide .
+    ex:derivedFrom """
+This guide covers how to install the AI Expert Agent platform at an enterprise customer site and activate it with a vendor-issued license.
+
+""",
+        """
+This guide explains how to run the vendor license management infrastructure and use the control dashboard.
+
+""" ;
+    ex:explain ex:vendor_license_management_infrastructure .
 
 ex:hybrid_approach rdfs:label "hybrid approach" ;
     ex:derivedFrom """This hybrid approach ensures that answers are grounded in verified facts, compliant with enterprise rules, and resistant to hallucinations.
@@ -339,14 +476,26 @@ ex:hybrid_approach rdfs:label "hybrid approach" ;
 """ ;
     ex:ensure ex:verified_facts .
 
-ex:participant_D rdfs:label "participant D" ;
+ex:instance rdfs:label "instance" ;
+    ex:derivedFrom """An instance is shown as **online** if its last heartbeat was within 10 minutes.
+
+""" ;
+    ex:show ex: .
+
+ex:page rdfs:label "* page" ;
     ex:derivedFrom """
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant S as Security Layer
-    participant N as NLP Core (L1)
-    participant E as Expert Agent (L2)
+The **Metrics** page shows:
+- Query volume per instance (sparkline)
+- Error count
+- Average uptime
+
+Data is updated every time an enterprise instance sends a heartbeat (every 5 minutes by default).
+
+""" ;
+    ex:show ex:Metrics .
+
+ex:participant_participant_participant_participant_participant_A rdfs:label "participant participant participant participant participant A" ;
+    ex:derivedFrom """AI (L2)
     participant A as Arbitrator (L3)
     participant R as Retrieval (L4)
     participant P as Planner (L5)
@@ -373,7 +522,7 @@ sequenceDiagram
     V->>D: Final Answer
     D->>D: Logs Reasoning Trace
     D->>U:""" ;
-    ex:u_s ex:sequenceDiagram_participant_User_participant_Security_Layer_U .
+    ex:u_s ex:participant_participant_participant_participant_Arbitrator .
 
 ex:pipeline_manager rdfs:label "pipeline_manager" ;
     ex:derivedFrom """**Pipeline Manager**: The `pipeline_manager` initializes a default `HybridPipeline` for the root domain.
@@ -394,9 +543,6 @@ ex:production_Admin rdfs:label "production Admin" ;
 """ ;
     ex:reject ex:Example .
 
-ex:rate rdfs:label "rate" ;
-    ex:set ex:Configure_license_server_rate_limit .
-
 ex:request rdfs:label "request" ;
     ex:derivedFrom """*   **Trace ID**: Every request gets a UUID shared across all 8 layers.
 """,
@@ -406,8 +552,20 @@ ex:request rdfs:label "request" ;
     ex:get ex:UUID ;
     ex:log ex:CHAT_QUERY .
 
-ex:sign rdfs:label "sign" ;
-    ex:in ex:Admin_user_login .
+ex:select_customer rdfs:label "select customer" ;
+    ex:derivedFrom """Navigate to **Licenses** → select customer → set expiry date → **Create**
+3.""" ;
+    ex:navigate ex: .
+
+ex:streaming_Contact rdfs:label "streaming Contact" ;
+    ex:block ex:vendor ;
+    ex:derivedFrom """Contact your vendor."}
+   ```
+5. **In-progress streaming responses are NOT interrupted** — only new requests are blocked
+
+---
+
+""" .
 
 ex:system rdfs:label "system" ;
     ex:avoid ex:raw_SPARQL_injection ;
@@ -424,57 +582,72 @@ The system operates in three distinct reasoning modes, selectable via the `mode`
     ex:structure ex: ;
     ex:utilize ex:external_knowledge .
 
+ex:this rdfs:label "this" ;
+    ex:derivedFrom """Copy the generated `license_key` — this is sent to the enterprise customer
+
+---
+
+""" ;
+    ex:send ex:generated_license_key .
+
+ex:unique_UUID rdfs:label "unique UUID" ;
+    ex:derivedFrom """
+A unique UUID (`/data/instance_id`) is generated on first boot and persisted to the `instance_data` Docker volume.""" ;
+    ex:generate ex:first_boot .
+
+ex:user rdfs:label "user" ;
+    ex:derivedFrom """AI verifies that for the intent `ContractAnalysis`, the user (Guest) has permission.
+    -""" ;
+    ex:verify ex:intent .
+
 ex:values rdfs:label "values" ;
     ex:derive ex:formalized_evaluation_suite ;
     ex:derivedFrom "These values are derived from the project's formalized evaluation suite." .
 
-ex:vendor rdfs:label "vendor" ;
-    ex:disable ex:license .
+ex:vendor_db_Configure_rate rdfs:label "vendor_db Configure rate" ;
+    ex:Set ex:random_value ;
+    ex:derivedFrom """
+- [ ] Set `VENDOR_HMAC_SECRET` to a cryptographically random value (≥ 32 bytes)
+- [ ] Set `VENDOR_JWT_SECRET` to a cryptographically random value
+- [ ] Put `vendor_api` behind HTTPS (nginx + certbot or Cloudflare)
+- [ ] Restrict `vendor_db` port 5435 to internal traffic only
+- [ ] Set up PostgreSQL backups for `vendor_db`
+- [ ] Configure rate limiting on `/api/license/check` and `/api/heartbeat` endpoints
+""" .
 
 ex:vendor_platform rdfs:label "vendor platform" ;
-    ex:be ex:Separate_from_enterprise_deployments .
+    ex:be ex:enterprise_deployments ;
+    ex:derivedFrom """
+The vendor platform is completely separate from enterprise deployments.""" .
+
+ex:vendor_vendor_API_API_database rdfs:label "vendor vendor API API database" ;
+    ex:derivedFrom """**
+- The vendor database (`vendor_db`) runs on port 5435 and should be firewall-restricted to the vendor API container only.
+- All API endpoints under `/admin/*` require a valid JWT token.
+""" ;
+    ex:require ex:port .
+
+ex:2 rdfs:label "2" .
+
+ex:4 rdfs:label "4" .
 
 ex:AI_Expert_Agent_platform a owl:Class ;
     rdfs:label "AI Expert Agent platform" .
 
-ex:Admin_user_login a owl:Class ;
-    rdfs:label "Admin user login" .
-
-ex:Admin_user_registration a owl:Class ;
-    rdfs:label "Admin user registration" .
-
-ex:An_automated_rule_triggered_by_specific_transaction_characteristics a owl:Class ;
-    rdfs:label "An automated rule triggered by specific transaction characteristics." .
-
-ex:An_automated_rule_triggered_by_suspicious_transaction_detection a owl:Class ;
-    rdfs:label "An automated rule triggered by suspicious transaction detection." .
-
-ex:An_escalation_level_for_compliance_review_based_on_branch_activity a owl:Class ;
-    rdfs:label "An escalation level for compliance review based on branch activity." .
-
-ex:An_indicator_of_suspicious_activity_related_to_customer_behavior a owl:Class ;
-    rdfs:label "An indicator of suspicious activity related to customer behavior." .
-
 ex:CHAT_QUERY a owl:Class ;
     rdfs:label "CHAT_QUERY" .
+
+ex:Collateral_requirements_for_each_loan_category_are_defined_by a owl:Class ;
+    rdfs:label "Collateral requirements for each loan category are defined by" .
+
+ex:Compliance_Review_Level a owl:Class ;
+    rdfs:label "Compliance Review Level" .
 
 ex:Compliance_queries a owl:Class ;
     rdfs:label "Compliance queries" .
 
-ex:Configure_license_server_rate_limit a owl:Class ;
-    rdfs:label "Configure license server rate limit" .
-
 ex:Constrained_Template a owl:Class ;
     rdfs:label "Constrained Template" .
-
-ex:Create_license_for_customer a owl:Class ;
-    rdfs:label "Create license for customer" .
-
-ex:Disable_license_for_customer a owl:Class ;
-    rdfs:label "Disable license for customer" .
-
-ex:Disable_license_for_specific_instance a owl:Class ;
-    rdfs:label "Disable license for specific instance" .
 
 ex:Example a owl:Class ;
     rdfs:label "Example" .
@@ -497,6 +670,9 @@ ex:Large_Language_deterministic_Symbolic_Expert_Formal_flexibility a owl:Class ;
 ex:Linked_Open_Hybrid_NLP_Expert_Agent_implementation a owl:Class ;
     rdfs:label "Linked Open Hybrid NLP Expert Agent implementation" .
 
+ex:Metrics a owl:Class ;
+    rdfs:label "Metrics" .
+
 ex:PostgreSQL a owl:Class ;
     rdfs:label "PostgreSQL" ;
     ex:derivedFrom """**PostgreSQL (Relational)**:
@@ -512,26 +688,20 @@ ex:Reasoning_Trace a owl:Class ;
 ex:SPARQL_federation a owl:Class ;
     rdfs:label "SPARQL federation" .
 
-ex:Score_components_and_minimum_approval_score a owl:Class ;
-    rdfs:label "Score components and minimum approval score" .
-
-ex:Separate_from_enterprise_deployments a owl:Class ;
-    rdfs:label "Separate from enterprise deployments" .
-
-ex:Specific_collateral_requirements_for_each_loan_category a owl:Class ;
-    rdfs:label "Specific collateral requirements for each loan category" .
-
 ex:Streaming_Chat_API a owl:Class ;
     rdfs:label "Streaming Chat API" .
 
 ex:Symbolic_Control_Surface a owl:Class ;
     rdfs:label "Symbolic Control Surface" .
 
-ex:The_document_covers_the_following_aspects_of_corporate_risk_assessment a owl:Class ;
-    rdfs:label "The document covers the following aspects of corporate risk assessment" .
+ex:The_corporate_risk_assessment_covers_aspects_such_as a owl:Class ;
+    rdfs:label "The corporate risk assessment covers aspects such as" .
 
-ex:The_document_covers_the_following_loan_categories a owl:Class ;
-    rdfs:label "The document covers the following loan categories:" .
+ex:The_credit_scoring_model_for_retail_loans_includes a owl:Class ;
+    rdfs:label "The credit scoring model for retail loans includes" .
+
+ex:The_document_covers_loan_categories_for a owl:Class ;
+    rdfs:label "The document covers loan categories for" .
 
 ex:To_define_standardized_procedures_for a owl:Class ;
     rdfs:label "To define standardized procedures for" .
@@ -548,8 +718,11 @@ ex:UUID a owl:Class ;
 ex:Validation_Queue a owl:Class ;
     rdfs:label "Validation Queue" .
 
-ex:Vendor_Platform_Guide a owl:Class ;
-    rdfs:label "Vendor Platform Guide" .
+ex:beneficial_ownership_info rdfs:label "beneficial ownership info" .
+
+ex:check rdfs:label "check" .
+
+ex:checks rdfs:label "# checks" .
 
 ex:cited_response rdfs:label "cited response" .
 
@@ -563,11 +736,21 @@ ex:document_chunks rdfs:label "document_chunks" .
 
 ex:endpoints rdfs:label "endpoints" .
 
+ex:enterprise_deployments rdfs:label "enterprise deployments" .
+
+ex:escalation_Fraud_detection_Money_laundering_prevention_Suspicious_Internal_monitoring rdfs:label "escalation Fraud detection Money laundering prevention Suspicious Internal monitoring" .
+
 ex:external_knowledge rdfs:label "external knowledge" .
 
 ex:final_update rdfs:label "final update" .
 
+ex:first_boot rdfs:label "first boot" .
+
 ex:formalized_evaluation_suite rdfs:label "formalized evaluation suite" .
+
+ex:funds rdfs:label "funds" .
+
+ex:generated_license_key rdfs:label "generated license_key" .
 
 ex:high_forensic_analysis rdfs:label "high forensic analysis" .
 
@@ -575,16 +758,25 @@ ex:immediate_license_verification rdfs:label "immediate license verification" .
 
 ex:intent rdfs:label "intent" .
 
+ex:it rdfs:label "it" .
+
 ex:keywords rdfs:label "keywords" .
 
-ex:license rdfs:label "license" ;
-    ex:create ex:Create_license_for_customer .
+ex:license rdfs:label "license" .
 
 ex:license_check rdfs:label "license check" .
 
 ex:license_key rdfs:label "license key" .
 
+ex:license_responses rdfs:label "license responses" .
+
 ex:local_domain rdfs:label "local domain" .
+
+ex:logs rdfs:label "logs" .
+
+ex:multiple_deployments rdfs:label "multiple deployments" .
+
+ex:participant_participant_participant_participant_Arbitrator rdfs:label "participant participant participant participant Arbitrator" .
 
 ex:pgvector rdfs:label "pgvector" .
 
@@ -592,6 +784,10 @@ ex:plan rdfs:label "plan" ;
     ex:build ex: ;
     ex:derivedFrom """**Planning**: A plan is built (Goal, Steps, Exclusions).
 """ .
+
+ex:port rdfs:label "port" .
+
+ex:random_value rdfs:label "random value" .
 
 ex:raw_SPARQL_injection rdfs:label "raw SPARQL injection" .
 
@@ -603,19 +799,17 @@ ex:risk_confidence_levels rdfs:label "risk confidence levels" .
 
 ex:root_default rdfs:label "root default" .
 
-ex:running_state rdfs:label "running state" .
-
-ex:sequenceDiagram_participant_User_participant_Security_Layer_U rdfs:label "sequenceDiagram participant User participant Security Layer U" .
-
 ex:server rdfs:label "server" .
 
-ex:signatures rdfs:label "signatures" .
+ex:signature rdfs:label "signature" .
 
-ex:skip_validation rdfs:label "skip validation" .
+ex:signatures rdfs:label "signatures" .
 
 ex:startup_event rdfs:label "startup_event" .
 
 ex:structured_blueprint rdfs:label "structured blueprint" .
+
+ex:supervisor rdfs:label "supervisor" .
 
 ex:topic rdfs:label "topic" .
 
@@ -627,26 +821,62 @@ ex:validation rdfs:label "validation" .
 
 ex:variables rdfs:label "variables" .
 
-ex:vector_similarity rdfs:label "vector similarity" .
+ex:vendor rdfs:label "vendor" ;
+    ex:derivedFrom """The vendor uses it to distinguish between multiple deployments under the same license.
 
-ex:verified_Hybrid_NLP_Expert_performance rdfs:label "verified Hybrid NLP Expert performance" .
+""",
+        """When your vendor disables the license:
+
+1.""" ;
+    ex:disable ex:license ;
+    ex:use ex:it .
+
+ex:vendor_license_management_infrastructure rdfs:label "vendor license management infrastructure" .
+
+ex:vendor_server rdfs:label "vendor server" ;
+    ex:continue ex: ;
+    ex:derivedFrom """
+If the vendor server is temporarily unreachable, the system will continue operating using the **last cached license state** for up to `LICENSE_FAIL_GRACE_PERIOD` seconds (default: 86400 = 24 hours).
+
+""" .
+
+ex:vendor_side_impacting_enterprise_outages rdfs:label "vendor side impacting enterprise outages" .
 
 ex:verified_facts rdfs:label "verified facts" .
+
+ex:verified_performance rdfs:label "verified performance" .
 
 ex:documents rdfs:label "documents" .
 
 ex:intents rdfs:label "intents" .
 
 ex: rdfs:label "*",
+        ":*",
         "=" ;
-    ex:be ex:Hybrid_Neuro_Symbolic_Conversational_enterprise_knowledge_regulated_Architecture ;
-    ex:derivedFrom """*   **Integration**: Primarily triggered in "External" mode or as a secondary fallback during reasoning.
+    ex:derivedFrom """
+**Via Dashboard:**
+- Go to **Licenses** → click the 🚫 (Ban) icon next to the license → confirms revocation
+
+**Via API:**
+```bash
+curl -X PUT http://localhost:8002/admin/licenses/<license-id> \\
+  -H "Authorization: Bearer <token>" \\
+  -H "Content-Type: application/json" \\
+  -d '{"status": "revoked"}'
+```
+
+Within one `LICENSE_CHECK_INTERVAL` (default 5 min), the enterprise instance will contact the license server, receive `system_active: false`, and start blocking requests with HTTP 503.
+
+---
+
+""",
+        """*   **Integration**: Primarily triggered in "External" mode or as a secondary fallback during reasoning.
 
 """,
         """**Auditing**: The final trace is saved to JSONL and the transaction DB.
 
-""",
-        "The **Expert Agent** is a Hybrid Neuro-Symbolic Conversational Architecture designed for enterprise knowledge retrieval in regulated environments." ;
+""" ;
+    ex:go ex: ;
     ex:save ex:transaction_JSONL ;
     ex:trigger ex:External_mode .
 
