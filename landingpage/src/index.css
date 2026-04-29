@@ -1,0 +1,170 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* LxGuard.AI design system — deep-space neuro-symbolic theme.
+   All colors MUST be HSL. */
+
+@layer base {
+  :root {
+    /* Core palette */
+    --background: 230 50% 4%;
+    --foreground: 210 40% 98%;
+
+    --card: 230 40% 7%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 230 45% 6%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 189 94% 55%;            /* neon cyan */
+    --primary-foreground: 230 50% 6%;
+
+    --secondary: 224 76% 58%;          /* electric blue */
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 230 30% 14%;
+    --muted-foreground: 215 25% 70%;
+
+    --accent: 271 81% 66%;             /* violet */
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 224 40% 18%;
+    --input: 224 40% 18%;
+    --ring: 189 94% 55%;
+
+    --radius: 0.85rem;
+
+    /* Branded extras */
+    --neon-cyan: 189 94% 55%;
+    --neon-blue: 224 92% 60%;
+    --neon-violet: 271 81% 66%;
+    --neon-magenta: 322 84% 60%;
+    --surface: 230 45% 6%;
+    --surface-elev: 230 40% 9%;
+    --hairline: 220 50% 22%;
+
+    --gradient-hero: radial-gradient(ellipse at 50% 0%, hsl(224 80% 18% / 0.55), transparent 60%),
+                     radial-gradient(ellipse at 80% 80%, hsl(271 81% 30% / 0.35), transparent 55%),
+                     linear-gradient(180deg, hsl(230 60% 4%), hsl(230 50% 3%));
+    --gradient-neon: linear-gradient(135deg, hsl(189 94% 55%), hsl(224 92% 60%) 50%, hsl(271 81% 66%));
+    --gradient-text: linear-gradient(135deg, hsl(189 94% 75%), hsl(224 92% 75%) 45%, hsl(271 81% 78%));
+    --gradient-panel: linear-gradient(180deg, hsl(230 45% 9% / 0.7), hsl(230 50% 5% / 0.55));
+
+    --shadow-neon: 0 0 0 1px hsl(189 94% 55% / 0.25), 0 10px 40px -10px hsl(189 94% 55% / 0.45);
+    --shadow-violet: 0 0 0 1px hsl(271 81% 66% / 0.25), 0 10px 40px -10px hsl(271 81% 66% / 0.45);
+    --shadow-elev: 0 30px 80px -30px hsl(230 80% 2% / 0.8);
+
+    --sidebar-background: 230 45% 6%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 189 94% 55%;
+    --sidebar-primary-foreground: 230 50% 6%;
+    --sidebar-accent: 230 40% 12%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 224 40% 18%;
+    --sidebar-ring: 189 94% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% -10%, hsl(224 80% 18% / 0.45), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 90% 30%, hsl(271 81% 30% / 0.25), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 10% 80%, hsl(189 94% 30% / 0.18), transparent 60%),
+      hsl(var(--background));
+    background-attachment: fixed;
+  }
+
+  .font-display {
+    font-family: "Space Grotesk", "Inter", sans-serif;
+    letter-spacing: -0.02em;
+  }
+
+  .font-mono {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+  }
+}
+
+@layer components {
+  .glass {
+    background: var(--gradient-panel);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid hsl(var(--hairline) / 0.7);
+    box-shadow: var(--shadow-elev), inset 0 1px 0 hsl(210 40% 98% / 0.04);
+  }
+
+  .glass-strong {
+    background: linear-gradient(180deg, hsl(230 45% 12% / 0.85), hsl(230 50% 6% / 0.75));
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid hsl(var(--primary) / 0.25);
+    box-shadow: var(--shadow-neon);
+  }
+
+  .neon-border {
+    position: relative;
+  }
+  .neon-border::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: var(--gradient-neon);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0.7;
+  }
+
+  .text-gradient {
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .grid-bg {
+    background-image:
+      linear-gradient(hsl(var(--primary) / 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.08) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+  }
+
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.04;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.6'/></svg>");
+  }
+}
+
+@layer utilities {
+  .text-shadow-neon {
+    text-shadow: 0 0 24px hsl(var(--primary) / 0.45), 0 0 60px hsl(var(--accent) / 0.25);
+  }
+  .scroll-mt-nav {
+    scroll-margin-top: 5rem;
+  }
+}
