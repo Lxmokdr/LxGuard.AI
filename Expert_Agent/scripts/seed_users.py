@@ -1,64 +1,40 @@
 import sys
 import os
-import uuid
-from datetime import datetime
 
-# Add the project root to sys.path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# Add parent directory to path so we can import api modules
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from sqlalchemy.orm import Session
-from data.database import SessionLocal, engine, Base
+from data.database import SessionLocal
 from api.models import User
 from api.auth import get_password_hash
 
-def seed():
+def seed_users():
     db = SessionLocal()
     try:
-        # Create users matching the mock auth system for consistency
-        users_data = [
-            {
-                "id": "1",
-                "username": "admin",
-                "email": "admin@expert-agent.ai",
-                "role": "admin",
-                "password_hash": get_password_hash("admin123"),
-                "is_active": True
-            },
-            {
-                "id": "2",
-                "username": "employee",
-                "email": "john.doe@enterprise.com",
-                "role": "employee",
-                "password_hash": get_password_hash("employee123"),
-                "is_active": True
-            },
-            {
-                "id": "guest",
-                "username": "guest",
-                "email": "guest@public.com",
-                "role": "guest",
-                "password_hash": get_password_hash("guest123"),
-                "is_active": True
-            }
+        users_to_add = [
+            {"id": "user-admin", "username": "admin", "password_hash": get_password_hash("admin123"), "role": "admin", "is_active": True},
+            {"id": "user-employee", "username": "employee", "password_hash": get_password_hash("employee123"), "role": "employee", "is_active": True},
+            {"id": "user-guest", "username": "guest", "password_hash": get_password_hash("guest123"), "role": "guest", "is_active": True}
         ]
-
-        for user_info in users_data:
-            existing_user = db.query(User).filter(User.id == user_info["id"]).first()
+        
+        for user_data in users_to_add:
+            existing_user = db.query(User).filter(User.username == user_data["username"]).first()
             if not existing_user:
-                user = User(
-                    **user_info,
-                    created_at=datetime.utcnow()
-                )
-                db.add(user)
-                db.commit()
-                print(f"✅ Created User: {user.username} ({user.role})")
+                new_user = User(**user_data)
+                db.add(new_user)
+                print(f"Added user: {user_data['username']}")
             else:
-                print(f"ℹ️ User already exists: {existing_user.username}")
-
-        print("\n✨ User seeding completed successfully!")
-
+                existing_user.password_hash = user_data["password_hash"]
+                existing_user.role = user_data["role"]
+                print(f"Updated user: {user_data['username']}")
+        
+        db.commit()
+        print("Users seeded successfully!")
+    except Exception as e:
+        print(f"Error seeding users: {e}")
+        db.rollback()
     finally:
         db.close()
 
 if __name__ == "__main__":
-    seed()
+    seed_users()

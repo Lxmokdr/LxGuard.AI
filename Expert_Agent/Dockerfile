@@ -20,8 +20,8 @@ RUN python -m spacy download en_core_web_sm
 # Copy project files
 COPY . .
 
-# Expose port (Hugging Face expects 7860)
-EXPOSE 7860
+# Expose port
+EXPOSE 8001
 
 # Command to run the application (No reload for production)
-CMD ["uvicorn", "api.api_hybrid:app", "--host", "0.0.0.0", "--port", "7860"]
+CMD ["uvicorn", "api.api_hybrid:app", "--host", "0.0.0.0", "--port", "8001"]
