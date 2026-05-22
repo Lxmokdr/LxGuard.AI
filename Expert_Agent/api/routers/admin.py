@@ -703,12 +703,13 @@ async def upload_document(
         print(f"⚠️ Error saving document metadata to DB: {e}")
         db.rollback()
     
-    # Trigger a refresh of the knowledge base indexing
+    # Trigger a refresh of the knowledge base indexing (avoiding blocking full disk scan/NLP)
     kb = getattr(req.app.state, 'knowledge_base', None)
-    if kb and hasattr(kb, '_refresh_documents'):
-        kb._refresh_documents()
-    elif kb and hasattr(kb, 'reload_if_changed'):
-        kb.reload_if_changed()
+    if kb:
+        if hasattr(kb, '_load_from_db'):
+            kb._load_from_db()
+        elif hasattr(kb, '_refresh_documents'):
+            kb._refresh_documents()
         
     return {
         "status": "success", 
@@ -742,10 +743,15 @@ async def delete_document(doc_id: str, req: Request, user: User = Depends(get_cu
     db.commit()
     
     kb = getattr(req.app.state, 'knowledge_base', None)
-    if kb and hasattr(kb, '_refresh_documents'):
-        kb._refresh_documents()
-    elif kb and hasattr(kb, 'reload_if_changed'):
-        kb.reload_if_changed()
+    if kb:
+        if hasattr(kb, '_load_from_db'):
+            kb._load_from_db()
+        elif hasattr(kb, '_refresh_documents'):
+            kb._refresh_documents()
+            
+        # Keep the auto-discovery cache in sync without invoking a full disk crawl and NLP re-analysis
+        if hasattr(kb, 'auto_discovery') and kb.auto_discovery and hasattr(kb.auto_discovery, 'discovered_docs'):
+            kb.auto_discovery.discovered_docs.pop(db_doc.source, None)
         
     return {"status": "deleted", "file": db_doc.source}
 
