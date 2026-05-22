@@ -12,16 +12,12 @@ class ExplanationGenerator:
         self.use_local = use_local
         self.model_name = model_name
         
-        # Ollama API endpoint
-        self.base_url = os.getenv("OLLAMA_HOST", "http://localhost:11434")
-        self.ollama_url = f"{self.base_url}/api/generate"
-        
         from utils.rule_loader import RuleLoader
         self.rule_loader = RuleLoader(domain_id=domain_id)
         
-        if self.use_local:
-            print(f"Connecting to Ollama ({self.base_url}) with model: {self.model_name} for Domain: {domain_id}...")
-            self._test_ollama_connection()
+        from core.llm_factory import get_llm
+        self._llm = get_llm()
+        print(f"✅ ExplanationGenerator ready (Domain: {domain_id}, Provider: {type(self._llm).__name__})")
 
     def _test_ollama_connection(self):
         """Test Ollama connection with proper retry and timeout handling."""
@@ -147,96 +143,20 @@ class ExplanationGenerator:
             return raw_json
 
     def _call_ollama(self, prompt, format_json=False):
-        """Call Ollama API with optional JSON format enforcement."""
-        
-        payload = {
-            "model": self.model_name,
-            "prompt": prompt,
-            "stream": False,
-            "options": {
-                "temperature": 0.2 if format_json else 0.7, # Lower temperature for structural stability
-                "top_p": 0.9,
-                "num_predict": 1000 if format_json else 500
-            }
-        }
-        
-        if format_json:
-            payload["format"] = "json" # Ollama structured output enforcement
-        
+        """Generate a response using the configured LLM provider."""
         try:
-            print("  Generating response with Ollama...")
-            response = requests.post(
-                self.ollama_url,
-                json=payload,
-                timeout=120  # 2 minutes for generation
-            )
-            response.raise_for_status()
-            result = response.json()
-            
-            # DEBUG: Print raw response start to see structure
-            # (Debug print removed for cleanup)
-
-            # Primary extraction for /api/chat
-            answer = None
-            if "message" in result and "content" in result["message"]:
-                answer = result["message"]["content"]
-            
-            # Fallback extraction
+            print(f"  Generating response with {type(self._llm).__name__}...")
+            answer = self._llm.generate(prompt)
             if not answer:
-                # Robust extraction of text from various possible Ollama shapes
-                def extract_text(obj):
-                    if obj is None:
-                        return None
-                    if isinstance(obj, str):
-                        return obj
-                    if isinstance(obj, dict):
-                        # dive into common wrapper keys
-                        for wrap in ("result", "data", "outputs", "generated", "generation"):
-                            if wrap in obj and obj[wrap]:
-                                text = extract_text(obj[wrap])
-                                if text:
-                                    return text
-                        # common keys used by LLM APIs
-                        for key in ("response", "text", "result", "output", "reply", "answer", "content"):
-                            if key in obj and obj[key]:
-                                text = extract_text(obj[key])
-                                if text:
-                                    return text
-                        # choices/messages pattern
-                        if "choices" in obj and isinstance(obj["choices"], list) and obj["choices"]:
-                            return extract_text(obj["choices"][0])
-                        if "message" in obj:
-                            return extract_text(obj["message"]) 
-                    if isinstance(obj, list) and obj:
-                        # try first element with text
-                        for item in obj:
-                            text = extract_text(item)
-                            if text:
-                                return text
-                    return None
-            
-                answer = extract_text(result)
-
-            if not answer:
-                print(f"  ⚠ Failed to extract answer from: {json.dumps(result)[:200]}")
                 answer = "No response generated"
-
             print(f"  ✓ Generated {len(answer)} characters")
             return answer
-            
-        except requests.exceptions.Timeout:
-            return "⏱ Request timed out. The model is taking too long to respond. Try a smaller model like 'phi3' or increase timeout."
-        except requests.exceptions.RequestException as e:
-            return f"❌ Error calling Ollama: {str(e)}"
-        except json.JSONDecodeError:
-            return "❌ Error parsing Ollama response - received invalid JSON"
+        except Exception as e:
+            return f"❌ Error calling LLM: {str(e)}"
 
     def _stream_ollama(self, prompt: str):
-        """Streaming version of _call_ollama for internal pipeline use."""
-        from engines.ollama_client import OllamaClient
-        client = OllamaClient(base_url=self.base_url, model=self.model_name)
-        
-        for chunk in client.stream_generate(prompt):
+        """Streaming generation using the configured LLM provider."""
+        for chunk in self._llm.stream_generate(prompt):
             yield chunk
 
     def stream_explanation(self, inference_result, risk_level="low", target_language="en"):
@@ -275,11 +195,7 @@ class ExplanationGenerator:
         full_answer = ""
         collated_chunk = ""
         
-        # We need an internal client for streaming if not already there
-        from engines.ollama_client import OllamaClient
-        client = OllamaClient(base_url=self.base_url, model=self.model_name)
-        
-        for chunk in client.stream_generate(prompt):
+        for chunk in self._llm.stream_generate(prompt):
             full_answer += chunk
             yield "chunk", chunk
 
