@@ -384,13 +384,30 @@ async def update_admin_document(doc_id: str, update: DocumentUpdate, req: Reques
     }}
 
 @router.post("/documents/reindex")
-async def reindex_all_documents(req: Request, user: User = Depends(get_current_user)):
+async def reindex_all_documents(req: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     if user.role != "admin": raise HTTPException(status_code=403, detail="Admin access required")
+    
+    # 1. Fetch all documents from the database
+    db_docs = db.query(DBDocument).all()
+    source_dir = req.app.state.admin_config["source_directory"]
+    
+    reindexed_count = 0
+    chunks_count = 0
+    
+    for db_doc in db_docs:
+        try:
+            chunks_created = reindex_document(db=db, db_doc=db_doc, source_dir=source_dir)
+            reindexed_count += 1
+            chunks_count += chunks_created
+        except Exception as e:
+            print(f"⚠️ Error reindexing doc {db_doc.source}: {e}")
+            
+    # 2. Legacy Refresh
     kb = getattr(req.app.state, 'knowledge_base', None)
     if kb and hasattr(kb, '_refresh_documents'):
         kb._refresh_documents()
-    kb_docs_len = len(kb.documents) if kb and hasattr(kb, 'documents') else 0
-    return {"status": "reindexed", "count": kb_docs_len}
+        
+    return {"status": "reindexed", "count": reindexed_count, "chunks_created": chunks_count}
 
 @router.post("/documents/{doc_id}/reindex")
 async def reindex_single_document(doc_id: str, req: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
