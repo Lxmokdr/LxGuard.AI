@@ -720,41 +720,34 @@ async def upload_document(
     }
 
 @router.delete("/documents/{doc_id}")
-async def delete_document(doc_id: str, req: Request, user: User = Depends(get_current_user)):
+async def delete_document(doc_id: str, req: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     if user.role != "admin": raise HTTPException(status_code=403, detail="Admin access required")
     source_dir = req.app.state.admin_config.get("source_directory", "docs")
     
-    # doc_id may be a numeric index (from frontend) or a filename (legacy)
-    target_path = None
-    all_files = []
-    if os.path.exists(source_dir):
-        for root, _, files in os.walk(source_dir):
-            for filename in sorted(files):
-                if filename.endswith(('.txt', '.pdf', '.docx', '.md')):
-                    all_files.append(os.path.join(root, filename))
-    
-    # Try numeric index first
+    db_doc = None
     try:
-        idx = int(doc_id) - 1
-        if 0 <= idx < len(all_files):
-            target_path = all_files[idx]
+        did = int(doc_id)
+        db_doc = db.query(DBDocument).filter(DBDocument.id == did).first()
     except ValueError:
-        # doc_id is a filename
-        for f in all_files:
-            if os.path.basename(f) == doc_id:
-                target_path = f
-                break
-    
-    if target_path and os.path.exists(target_path):
-        fname = os.path.basename(target_path)
+        db_doc = db.query(DBDocument).filter(DBDocument.source == doc_id).first()
+        
+    if not db_doc:
+        raise HTTPException(status_code=404, detail="Document not found in database")
+        
+    target_path = os.path.join(source_dir, db_doc.source)
+    if os.path.exists(target_path):
         os.remove(target_path)
-        kb = getattr(req.app.state, 'knowledge_base', None)
-        if kb and hasattr(kb, '_refresh_documents'):
-            kb._refresh_documents()
-        elif kb and hasattr(kb, 'reload_if_changed'):
-            kb.reload_if_changed()
-        return {"status": "deleted", "file": fname}
-    raise HTTPException(status_code=404, detail="File not found")
+        
+    db.delete(db_doc)
+    db.commit()
+    
+    kb = getattr(req.app.state, 'knowledge_base', None)
+    if kb and hasattr(kb, '_refresh_documents'):
+        kb._refresh_documents()
+    elif kb and hasattr(kb, 'reload_if_changed'):
+        kb.reload_if_changed()
+        
+    return {"status": "deleted", "file": db_doc.source}
 
 @router.post("/documents/scan")
 async def scan_documents(req: Request, user: User = Depends(get_current_user)):
