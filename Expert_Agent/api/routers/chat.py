@@ -68,7 +68,17 @@ async def chat_hybrid(request: ChatRequest, req: Request, user: User = Depends(g
     tenant_id = request.tenant_id or user.tenant_id
     
     if not domain_id:
-        raise HTTPException(status_code=400, detail="domain_id is required either in request or user context")
+        from data.database import SessionLocal
+        from api.models import Domain
+        db = SessionLocal()
+        try:
+            first_domain = db.query(Domain).first()
+            domain_id = first_domain.id if first_domain else "529af299-a716-44a0-b2ea-a262a501982f"
+        except Exception as e:
+            print(f"⚠️ Error querying default domain: {e}")
+            domain_id = "529af299-a716-44a0-b2ea-a262a501982f"
+        finally:
+            db.close()
         
     # 2. Get Pipeline
     pipeline = pipeline_manager.get_pipeline(domain_id=domain_id, tenant_id=tenant_id)
@@ -126,7 +136,17 @@ async def chat_hybrid_stream(request: ChatRequest, req: Request, user: User = De
     tenant_id = request.tenant_id or user.tenant_id
     
     if not domain_id:
-        raise HTTPException(status_code=400, detail="domain_id is required either in request or user context")
+        from data.database import SessionLocal
+        from api.models import Domain
+        db = SessionLocal()
+        try:
+            first_domain = db.query(Domain).first()
+            domain_id = first_domain.id if first_domain else "529af299-a716-44a0-b2ea-a262a501982f"
+        except Exception as e:
+            print(f"⚠️ Error querying default domain: {e}")
+            domain_id = "529af299-a716-44a0-b2ea-a262a501982f"
+        finally:
+            db.close()
         
     # 2. Get Pipeline
     pipeline = pipeline_manager.get_pipeline(domain_id=domain_id, tenant_id=tenant_id)
