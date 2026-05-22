@@ -13,7 +13,7 @@ from data.knowledge_base import KnowledgeBase
 from security.security_enforcer import SecurityEnforcer
 from security.audit_logger import AuditLogger
 from engines.retrieval_engine import AgentDrivenRetrieval
-from engines.ollama_client import OllamaClient
+from core.llm_factory import get_llm
 from utils.explanation import ExplanationGenerator
 from agents.validation_agent import ValidationAgent
 from api.auth import User
@@ -170,7 +170,7 @@ class HybridPipeline:
         
         # Build constrained prompt (Domain-agnostic)
         prompt = self._build_constrained_prompt(answer_plan, question, target_language)
-        answer = self.generator._call_ollama(prompt)
+        answer = get_llm().generate(prompt)
         
         # ✅ Validation
         validation = self.validator.validate(answer, answer_plan, arbitration.final_intent)
@@ -494,7 +494,7 @@ class HybridPipeline:
         prompt = self._build_constrained_prompt(answer_plan, question, target_language)
         print(f"DEBUG: [Layer 6] Final prompt for LLM:\n{'='*40}\n{prompt}\n{'='*40}")
         
-        for chunk in self.generator._stream_ollama(prompt):
+        for chunk in get_llm().stream_generate(prompt):
             full_answer += chunk
             yield {"type": "chunk", "content": chunk}
 

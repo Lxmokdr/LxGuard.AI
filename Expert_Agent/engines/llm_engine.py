@@ -1,15 +1,15 @@
 from typing import Dict, Any
-from engines.ollama_client import OllamaClient
+from core.llm_factory import get_llm
 
 class LLMEngine:
     """
     MODE B: General LLM Engine.
-    Uses local LLM (Ollama) for general tasks, translation, and summarization.
+    Uses the configured LLM provider (Gemini or Ollama) based on LLM_PROVIDER env var.
     """
     
     def __init__(self):
         print("🤖 Initializing LLM Engine (Mode B)...")
-        self.client = OllamaClient()
+        self.client = get_llm()
         
     def query(self, user_query: str, context: str = "") -> Dict[str, Any]:
         """
