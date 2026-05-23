@@ -126,7 +126,11 @@ class ExpertAgent:
         # Load induced Knowledge Graph (RDF/Triple based)
         from rdflib import Graph
         self.kb_graph = Graph()
-        induced_path = "knowledge_base/ontology.ttl"
+        
+        # Robust path resolution relative to this file's location
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        induced_path = os.path.join(base_dir, "knowledge_base", "ontology.ttl")
+        
         if os.path.exists(induced_path):
             try:
                 self.kb_graph.parse(induced_path, format="turtle")
@@ -495,7 +499,8 @@ class ExpertAgent:
         p_uri = URIRef(predicate_uri) if predicate_uri else get_uri(predicate)
         o_uri = URIRef(object_uri) if object_uri else get_uri(obj)
         
-        induced_path = "knowledge_base/ontology.ttl"
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        induced_path = os.path.join(base_dir, "knowledge_base", "ontology.ttl")
         
         if action == "reject":
             # Remove the specific triple

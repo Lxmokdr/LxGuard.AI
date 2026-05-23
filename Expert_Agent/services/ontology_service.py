@@ -9,7 +9,11 @@ def build_ontology(source_dir: str, app_state: Any) -> None:
     Build or refresh the ontology from a source directory and
     update the application's ontology engine and knowledge base.
     """
-    builder = OntologyBuilder(ontology_path="knowledge_base/ontology.ttl")
+    import os
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    ontology_path = os.path.join(base_dir, "knowledge_base", "ontology.ttl")
+    
+    builder = OntologyBuilder(ontology_path=ontology_path)
     
     # 1. Clear existing induced knowledge for a fresh build from source directory
     if hasattr(builder.kg_manager, 'clear_graph'):
@@ -19,7 +23,7 @@ def build_ontology(source_dir: str, app_state: Any) -> None:
     builder.build_from_directory(source_dir)
 
     # Replace or initialize the ontology-backed expert engine
-    app_state.dual_expert = OntologyEngine(ontology_path="knowledge_base/ontology.ttl")
+    app_state.dual_expert = OntologyEngine(ontology_path=ontology_path)
 
     # Optionally refresh the in-memory knowledge base if present
     kb = getattr(app_state, "knowledge_base", None)

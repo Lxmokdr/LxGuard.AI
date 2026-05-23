@@ -485,11 +485,10 @@ async def get_knowledge_graph(req: Request, user: User = Depends(get_current_use
     pipeline = getattr(req.app.state, 'pipeline', None)
     if not pipeline or not hasattr(pipeline, 'expert_agent'):
          # Fallback to local parsing if pipeline not fully initialized
-         ontology_path = os.path.abspath(os.path.join(os.getcwd(), 'knowledge_base', 'ontology.ttl'))
+         base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+         ontology_path = os.path.join(base_dir, 'knowledge_base', 'ontology.ttl')
          if getattr(req.app.state, 'admin_config', {}).get("ontology_path"):
              ontology_path = req.app.state.admin_config["ontology_path"]
-         elif not os.path.exists(ontology_path):
-             ontology_path = os.path.abspath(os.path.join(os.getcwd(), '..', 'knowledge_base', 'ontology.ttl'))
              
          nodes = []
          links = []
@@ -720,6 +719,16 @@ async def upload_document(
         print(f"⚠️ Error saving document metadata to DB: {e}")
         db.rollback()
     
+    # 🚀 AUTOMATIC CHUNKING & EMBEDDING - Trigger immediately on document inclusion
+    print(f"📄 Starting automatic chunking for: {safe_filename}")
+    try:
+        from services.document_indexing import reindex_document
+        chunks_created = reindex_document(db=db, db_doc=db_doc, source_dir=source_dir)
+        print(f"✅ Document '{safe_filename}' automatically chunked into {chunks_created} chunks with embeddings")
+    except Exception as e:
+        print(f"❌ Error during automatic chunking: {e}")
+        # Don't fail the upload if chunking fails - document is still saved
+    
     # Trigger a refresh of the knowledge base indexing (avoiding blocking full disk scan/NLP)
     kb = getattr(req.app.state, 'knowledge_base', None)
     if kb:
@@ -734,7 +743,7 @@ async def upload_document(
         "path": file_path,
         "scope": scope,
         "access_level": access_level,
-        "message": f"Document '{safe_filename}' saved to {source_dir}"
+        "message": f"Document '{safe_filename}' saved and automatically chunked"
     }
 
 @router.delete("/documents/{doc_id}")
@@ -1275,6 +1284,29 @@ async def update_settings(
         pipeline = getattr(req.app.state, "pipeline", None)
         if pipeline and hasattr(pipeline, "audit"):
             pipeline.audit.enhanced_logging = payload.enhanced_audit_logging
+
+    # 🚀 AUTO-RECHUNK: If chunk settings changed, automatically re-chunk all documents
+    if "max_chunk_size" in updated_keys or "chunk_overlap" in updated_keys:
+        print(f"📦 Chunk settings changed - triggering automatic re-chunking of all documents...")
+        try:
+            from services.document_indexing import reindex_document
+            from api.models import Document as DBDocument
+            
+            source_dir = req.app.state.admin_config.get("source_directory", "docs")
+            all_docs = db.query(DBDocument).all()
+            rechunked_count = 0
+            
+            for doc in all_docs:
+                try:
+                    chunks_created = reindex_document(db=db, db_doc=doc, source_dir=source_dir)
+                    rechunked_count += 1
+                    print(f"  ✅ Re-chunked '{doc.source}' into {chunks_created} chunks")
+                except Exception as e:
+                    print(f"  ⚠️ Failed to re-chunk '{doc.source}': {e}")
+            
+            print(f"✅ Auto-rechunking complete: {rechunked_count} documents processed")
+        except Exception as e:
+            print(f"❌ Error during auto-rechunking: {e}")
 
     return {
         "status": "updated",
