@@ -316,13 +316,26 @@ class ExpertAgent:
         """Get the answer template for an intent (Domain-aware)"""
         tpl = self.answer_templates.get(intent, self.answer_templates.get("General", {}))
         
-        # Ensure a 'steps' list exists for the planner
+        # Ensure it is a dictionary we can modify
+        if not isinstance(tpl, dict):
+            tpl = {"template": str(tpl)}
+        else:
+            tpl = dict(tpl)
+            
+        # Check if any applicable rule defines steps in its action
+        applicable_rules = self.get_applicable_rules(intent)
+        rule_steps = []
+        for rule in applicable_rules:
+            action = rule.get_action()
+            if isinstance(action, dict) and "steps" in action:
+                rule_steps.extend(action["steps"])
+                
+        if rule_steps:
+            tpl["steps"] = rule_steps
+        
+        # Ensure a 'steps' list exists for the planner if not defined by template or rule
         if "steps" not in tpl:
             tpl["steps"] = ["Analyze the core question.", "Provide an expert answer based on documentation.", "Check for security and compliance."]
-            
-        # Handle the new template structure (string template vs YAML dict)
-        if isinstance(tpl, dict) and "template" in tpl:
-            return {"structure": "flexible", "template": tpl["template"], "steps": tpl["steps"]}
             
         return tpl
     

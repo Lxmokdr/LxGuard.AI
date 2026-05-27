@@ -139,6 +139,7 @@ class SemanticValidator:
             return [], 1.0
         
         answer_lower = answer.lower()
+        answer_words = re.findall(r'\b\w+\b', answer_lower)
         missing_steps = []
         covered_count = 0
         
@@ -146,8 +147,20 @@ class SemanticValidator:
             # Extract key terms from step
             step_terms = self._extract_key_terms(step)
             
-            # Check if any key terms appear in answer
-            found = any(term.lower() in answer_lower for term in step_terms)
+            # Check if key terms appear in answer
+            found = False
+            for term in step_terms:
+                term_lower = term.lower()
+                # 1. Check exact/substring match in the full answer
+                if term_lower in answer_lower:
+                    found = True
+                    break
+                # 2. Check prefix match (first 4 characters) for terms >= 5 chars
+                if len(term_lower) >= 5:
+                    prefix = term_lower[:4]
+                    if any(w.startswith(prefix) for w in answer_words):
+                        found = True
+                        break
             
             if found:
                 covered_count += 1

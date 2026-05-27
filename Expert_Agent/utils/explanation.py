@@ -96,7 +96,7 @@ class ExplanationGenerator:
         template_info = templates.get(intent) or templates.get("General")
         
         if template_info:
-            template = template_info.get("template_body") # Use template_body from PromptTemplate
+            template = template_info.get("template_body") or template_info.get("template") or "" # Use template_body or template from PromptTemplate
             # Simple placeholder replacement
             prompt = template.replace("{question}", inference_result.get('question'))
             prompt = prompt.replace("{context}", context_text)

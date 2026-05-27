@@ -40,7 +40,20 @@ class HybridPipeline:
         self.domain_id = domain_id
         self.tenant_id = tenant_id
         
-        print(f"🚀 Initializing Hybrid Pipeline (Domain: {domain_id}, Tenant: {tenant_id})...")
+        # Load human-readable domain name for prompting
+        self.domain_name = "General"
+        try:
+            from data.database import SessionLocal
+            from api.models import Domain
+            db = SessionLocal()
+            domain = db.query(Domain).filter_by(id=domain_id).first()
+            if domain:
+                self.domain_name = domain.name
+            db.close()
+        except Exception as e:
+            print(f"⚠️ Failed to query domain name: {e}")
+            
+        print(f"🚀 Initializing Hybrid Pipeline (Domain: {self.domain_name} ({domain_id}), Tenant: {tenant_id})...")
         
         # Layer 1: Advanced NLP Core (Domain-aware)
         self.nlp_core = AdvancedNLPCore(domain_id=domain_id)
@@ -175,6 +188,35 @@ class HybridPipeline:
         # ✅ Validation
         validation = self.validator.validate(answer, answer_plan, arbitration.final_intent)
         
+        # Multi-turn refinement loop (Layer 7 Validation Re-generation)
+        attempt = 0
+        domain_info = getattr(self, "domain_name", self.domain_id)
+        while not validation.valid and attempt < max_retries:
+            attempt += 1
+            print(f"⚠️ Validation failed (score: {validation.score}). Retrying generation (attempt {attempt}/{max_retries})...")
+            # Build refinement prompt with specific issues feedback
+            feedback = "\n".join([f"- {issue}" if isinstance(issue, str) else f"- {issue.get('message', '')}" for issue in validation.issues])
+            refinement_prompt = f"""You are an expert assistant for the domain: {domain_info}.
+Your previous answer did not follow the required plan.
+
+Original Question: {question}
+
+Previous Answer:
+{answer}
+
+Validation Feedback:
+{feedback}
+
+Please regenerate the answer. Make sure to:
+1. Adhere strictly to the required steps.
+2. Fix any unsupported claims or additions using only the provided context.
+3. Remove any forbidden topics.
+4. Do NOT output step headers or internal reasoning steps.
+
+Answer:"""
+            answer = get_llm().generate(refinement_prompt)
+            validation = self.validator.validate(answer, answer_plan, arbitration.final_intent)
+            
         # 🔒 Strict Security Rejection (Layer 7 Enforcement)
         if not validation.checks.get("forbidden_topics", True):
             self.audit.log_rejection(question, user, "Security violation: Forbidden topic detected in answer.", trace_id, self.domain_id, self.tenant_id)
@@ -680,8 +722,8 @@ class HybridPipeline:
             print(f"❌ Failed to save to PostgreSQL logs: {db_e}")
 
     def _build_constrained_prompt(self, plan: AnswerPlan, question: str, target_language: Optional[str] = None) -> str:
-        # Load domain name for persona (optionally)
-        domain_info = self.expert_agent.domain_id
+        # Load domain name for persona
+        domain_info = getattr(self, "domain_name", self.domain_id)
         
         prompt_parts = [
             f"You are an expert assistant for the domain: {domain_info}.",

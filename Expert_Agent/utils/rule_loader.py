@@ -103,12 +103,26 @@ class RuleLoader:
                 intent = db.query(Intent).get(p.intent_id) if p.intent_id else None
                 intent_name = intent.name if intent else "General"
                 
-                # Try to parse structure from body (mocking the YAML structure for compatibility)
-                # In the future, this should be a proper JSON field in PromptTemplate
-                templates[intent_name] = {
+                # Base dictionary for backwards compatibility
+                template_data = {
                     "template": p.template_body,
+                    "template_body": p.template_body,
                     "version": p.version
                 }
+                
+                # Try to parse structure from body (mocking the YAML structure for compatibility)
+                if p.template_body:
+                    try:
+                        parsed = yaml.safe_load(p.template_body)
+                        if isinstance(parsed, dict):
+                            # Normalize keys to lowercase (e.g. steps, structure, max_length)
+                            normalized = {k.lower(): v for k, v in parsed.items()}
+                            template_data.update(normalized)
+                    except Exception as e:
+                        # Not a valid YAML dictionary, treat as plain text template
+                        pass
+                
+                templates[intent_name] = template_data
             return templates
         finally:
             db.close()
