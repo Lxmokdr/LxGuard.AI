@@ -195,6 +195,8 @@ async def chat_hybrid_stream(request: ChatRequest, req: Request, user: User = De
                                 loop.call_soon_threadsafe(queue.put_nowait, chunk)
                     except Exception as e:
                         print(f"❌ LLM Stream Error: {e}")
+                        if loop.is_running():
+                            loop.call_soon_threadsafe(queue.put_nowait, {"type": "error", "message": f"LLM Error: {str(e)}"})
                     finally:
                         if loop.is_running():
                             loop.call_soon_threadsafe(queue.put_nowait, None)
@@ -260,6 +262,8 @@ async def chat_hybrid_stream(request: ChatRequest, req: Request, user: User = De
                                 loop.call_soon_threadsafe(queue.put_nowait, event)
                     except Exception as e:
                         print(f"❌ Pipeline Stream Error: {e}")
+                        if loop.is_running():
+                            loop.call_soon_threadsafe(queue.put_nowait, {"type": "error", "message": f"Pipeline Error: {str(e)}"})
                     finally:
                         if loop.is_running():
                             loop.call_soon_threadsafe(queue.put_nowait, None)
