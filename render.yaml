@@ -1,4 +1,5 @@
 services:
+  # ── Expert Agent Backend ───────────────────────────────────────────────────
   - type: web
     name: expert-agent-backend
     env: python
@@ -7,12 +8,36 @@ services:
     rootDir: Expert_Agent
     envVars:
       - key: DATABASE_URL
-        sync: false # User will provide Supabase URL
+        sync: false
       - key: REDIS_URL
-        sync: false # User will provide Upstash URL
+        sync: false
       - key: GEMINI_API_KEY
         sync: false
       - fromGroup: expert-agent-secrets
+
+  # ── Vendor License & Control API ───────────────────────────────────────────
+  - type: web
+    name: lxguard-vendor-api
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    rootDir: vendor_platform/api
+    envVars:
+      - key: VENDOR_DATABASE_URL
+        fromDatabase:
+          name: lxguard-vendor-db
+          property: connectionString
+      - key: VENDOR_HMAC_SECRET
+        sync: false   # Set this manually in Render dashboard
+      - key: VENDOR_JWT_SECRET
+        sync: false   # Set this manually in Render dashboard
+
+  # ── Vendor Postgres Database ───────────────────────────────────────────────
+databases:
+  - name: lxguard-vendor-db
+    plan: free
+    databaseName: vendor_db
+    user: vendor
 
 envVarGroups:
   - name: expert-agent-secrets
